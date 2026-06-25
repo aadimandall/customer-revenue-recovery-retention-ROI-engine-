@@ -1,0 +1,2 @@
+scenario_count,strategy_count,best_base_strategy,best_base_targeted_customers,best_base_expected_customers_saved,best_base_expected_saved_clv_proxy,best_base_campaign_cost_proxy,best_base_net_save_value_proxy,best_base_roi_proxy,best_base_budget_status,scenarios_with_positive_recommendation
+5,12,All positive ROI paid-offer candidates,71437,4704.974760676553,16620208.953233957,791283.75,15828925.203233957,20.004107506610566,Within budget and positive ROI,5

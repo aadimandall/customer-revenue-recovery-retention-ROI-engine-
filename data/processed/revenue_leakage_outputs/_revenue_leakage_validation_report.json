@@ -1,0 +1,62 @@
+[
+  {
+    "check_name": "portfolio_summary_has_one_row",
+    "status": "PASS",
+    "value": 1,
+    "notes": "Portfolio summary should return one row."
+  },
+  {
+    "check_name": "positive_profit_adjusted_clv",
+    "status": "PASS",
+    "value": 974361046.22,
+    "notes": "Total CLV proxy should be positive."
+  },
+  {
+    "check_name": "positive_future_churned_clv",
+    "status": "PASS",
+    "value": 137698149.68,
+    "notes": "Future churned CLV proxy should be positive for leakage analysis."
+  },
+  {
+    "check_name": "leakage_rate_reasonable",
+    "status": "PASS",
+    "value": 0.141321,
+    "notes": "Leakage rate should be between 0 and 100%."
+  },
+  {
+    "check_name": "clv_concentration_has_10_deciles",
+    "status": "PASS",
+    "value": 10,
+    "notes": "CLV concentration table should have ten value deciles."
+  },
+  {
+    "check_name": "threshold_table_has_four_rows",
+    "status": "PASS",
+    "value": 4,
+    "notes": "Threshold table should contain top 1%, 5%, 10%, and 20%."
+  },
+  {
+    "check_name": "scenario_table_has_three_rows",
+    "status": "PASS",
+    "value": 3,
+    "notes": "Scenario table should contain conservative, base, and aggressive recovery assumptions."
+  },
+  {
+    "check_name": "base_recovery_opportunity_positive",
+    "status": "PASS",
+    "value": 13769814.97,
+    "notes": "Base recovery opportunity should be positive."
+  },
+  {
+    "check_name": "budget_opportunity_not_empty",
+    "status": "PASS",
+    "value": 5,
+    "notes": "Budget opportunity table should contain retention budget tiers."
+  },
+  {
+    "check_name": "model_priority_segments_not_empty",
+    "status": "PASS",
+    "value": 68,
+    "notes": "Model-priority table should contain segment recommendations."
+  }
+]

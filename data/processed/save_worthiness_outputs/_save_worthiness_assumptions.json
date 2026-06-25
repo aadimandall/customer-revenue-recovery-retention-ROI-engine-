@@ -1,0 +1,24 @@
+{
+  "economic_note": "profit_adjusted_clv_proxy already includes the gross-margin assumption from the CLV layer. This script does not multiply by margin again.",
+  "response_rate_assumptions": {
+    "Immediate premium save offer": 0.14,
+    "Premium win-back review": 0.12,
+    "High-value targeted retention": 0.08,
+    "Targeted lifecycle nurture": 0.05,
+    "Low-cost automated retention": 0.025,
+    "Protect without discount": 0.01,
+    "Monitor only": 0.0,
+    "Suppress paid offer": 0.0
+  },
+  "intervention_cost_assumptions": {
+    "Immediate premium save offer": 18.0,
+    "Premium win-back review": 12.0,
+    "High-value targeted retention": 7.5,
+    "Targeted lifecycle nurture": 3.0,
+    "Low-cost automated retention": 0.75,
+    "Protect without discount": 0.25,
+    "Monitor only": 0.0,
+    "Suppress paid offer": 0.0
+  },
+  "scoring_note": "Future churn labels and future_churned_clv_proxy are used only for retrospective validation. They are not used to calculate save-worthiness."
+}

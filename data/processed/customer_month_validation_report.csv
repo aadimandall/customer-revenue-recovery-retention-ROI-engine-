@@ -1,0 +1,13 @@
+check_name,status,value,notes
+customer_month_table_not_empty,PASS,1094039,Customer-month table should have rows.
+modeling_snapshot_not_empty,PASS,970960,Modeling snapshot should have rows.
+no_duplicate_customer_month_rows,PASS,0,There should be only one row per customer per observed month.
+one_snapshot_row_per_customer,PASS,0,The modeling snapshot should have one row per labeled customer.
+snapshot_rows_equal_unique_users,PASS,"rows=970960, unique_users=970960",Snapshot row count should match distinct customer count.
+no_missing_churn_target,PASS,0,Every modeling row should have a churn label.
+churn_rate_reasonable,PASS,0.089942,Churn rate should be non-zero and below 50% for this KKBox label window.
+no_negative_revenue_values,PASS,0,Monthly revenue and list price should not be negative.
+tenure_values_reasonable,PASS,0,Tenure should not be strongly negative. Small edge cases may come from date alignment.
+users_without_observed_month_tracked,PASS,8567,This is an informational check showing labeled users without observed transaction/activity rows.
+customer_month_date_range_exists,PASS,2015-01 to 2017-03,Customer-month table should have a valid observed month range.
+tableau_base_file_exists,PASS,337524183,CSV export for Tableau should exist and be non-empty.

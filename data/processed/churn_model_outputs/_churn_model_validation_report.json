@@ -1,0 +1,44 @@
+[
+  {
+    "check_name": "predicted_probabilities_in_range",
+    "status": "PASS",
+    "value": "min=0.000120, max=0.999791",
+    "notes": "Model probabilities should be between 0 and 1."
+  },
+  {
+    "check_name": "roc_auc_above_random",
+    "status": "PASS",
+    "value": 0.980842,
+    "notes": "ROC-AUC should be above random ranking."
+  },
+  {
+    "check_name": "pr_auc_above_base_churn_rate",
+    "status": "PASS",
+    "value": 0.915085,
+    "notes": "PR-AUC should be above the base churn rate."
+  },
+  {
+    "check_name": "top_decile_lift_above_one",
+    "status": "PASS",
+    "value": 8.858098,
+    "notes": "Highest-risk decile should have above-average churn concentration."
+  },
+  {
+    "check_name": "top_decile_captures_churners",
+    "status": "PASS",
+    "value": 0.88581,
+    "notes": "Top risk decile should capture more than its population share of churners."
+  },
+  {
+    "check_name": "scored_customer_output_not_empty",
+    "status": "PASS",
+    "value": 970960,
+    "notes": "Scored customer output should not be empty."
+  },
+  {
+    "check_name": "ten_risk_deciles_created",
+    "status": "PASS",
+    "value": 10,
+    "notes": "Scored customer file should contain ten risk deciles."
+  }
+]

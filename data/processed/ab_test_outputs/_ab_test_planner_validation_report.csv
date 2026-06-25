@@ -1,0 +1,13 @@
+check_name,status,value,notes
+experiment_population_not_empty,PASS,62836,A/B candidate population should not be empty.
+one_row_per_customer,PASS,0,Each customer should appear once in the A/B plan.
+treatment_and_control_exist,PASS,"treatment=31430, control=31406",Both treatment and control groups are required.
+randomization_balance_reasonable,PASS,0.5002,Treatment share should be close to 50%.
+expected_test_net_value_positive,PASS,7933465.94,Treatment arm should have positive expected net save value.
+power_scenarios_created,PASS,12,Power and sample-size scenarios should exist.
+metric_definitions_created,PASS,6,"Metric definitions should include primary, business, and guardrail metrics."
+treatment_plan_groups_sum_to_population,PASS,62836,Treatment/control summary should match experiment population.
+balance_diagnostics_created,PASS,8,Treatment/control balance diagnostics should exist.
+max_standardized_difference_reasonable,PASS,0.003967,Treatment/control groups should be balanced on key planning features.
+mde_readout_created,PASS,8,Minimum detectable effect readout should exist.
+risk_register_created,PASS,6,Experiment risk register should include practical launch risks.

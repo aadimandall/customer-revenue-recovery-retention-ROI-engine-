@@ -1,0 +1,20 @@
+{
+  "candidate_customers": 62836,
+  "treatment_customers": 31430,
+  "control_customers": 31406,
+  "control_churn_rate_planning": 0.6480803090904077,
+  "treatment_churn_rate_planning": 0.574029296944068,
+  "expected_absolute_churn_reduction": 0.07405101214633969,
+  "expected_relative_churn_reduction": 0.11426209237906272,
+  "expected_customers_saved_in_treatment": 2331.9314049425,
+  "treatment_expected_net_save_value_proxy": 7933465.941717556,
+  "treatment_campaign_cost_proxy": 375120.75,
+  "treatment_roi_proxy": 21.14909916798139,
+  "break_even_response_rate": 0.006058778454321872,
+  "approx_power_for_base_effect": 1.0,
+  "required_sample_size_per_group_base_80_power": 677,
+  "planned_sample_size_per_group": 31418,
+  "recommended_rollout_budget_cap_proxy": 750000.0,
+  "efficient_budget_value_capture_vs_max": 0.9998526991381873,
+  "validation_status": "PASS"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "check_name": "clv_table_not_empty",
+    "status": "PASS",
+    "value": 970960,
+    "notes": "Customer CLV table should contain rows."
+  },
+  {
+    "check_name": "one_row_per_customer",
+    "status": "PASS",
+    "value": "rows=970960, unique_users=970960",
+    "notes": "CLV layer should have one row per customer."
+  },
+  {
+    "check_name": "no_duplicate_customers",
+    "status": "PASS",
+    "value": 0,
+    "notes": "There should be no duplicate customer IDs in the CLV output."
+  },
+  {
+    "check_name": "no_null_clv_values",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Profit-adjusted CLV proxy should be populated for every customer."
+  },
+  {
+    "check_name": "no_negative_value_metrics",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Revenue, margin, and CLV proxy values should not be negative."
+  },
+  {
+    "check_name": "all_customers_have_value_tiers",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Every customer should have a value tier, action group, and budget tier."
+  }
+]

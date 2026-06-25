@@ -1,0 +1,44 @@
+[
+  {
+    "check_name": "lifecycle_base_not_empty",
+    "status": "PASS",
+    "value": 970960,
+    "notes": "Lifecycle base should contain customer rows."
+  },
+  {
+    "check_name": "one_row_per_customer",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Lifecycle survival base should have one row per customer."
+  },
+  {
+    "check_name": "positive_lifecycle_duration",
+    "status": "PASS",
+    "value": 1,
+    "notes": "Lifecycle duration should be at least one month."
+  },
+  {
+    "check_name": "overall_survival_curve_created",
+    "status": "PASS",
+    "value": 27,
+    "notes": "Overall Kaplan-Meier style survival curve should exist."
+  },
+  {
+    "check_name": "overall_survival_non_increasing",
+    "status": "PASS",
+    "value": true,
+    "notes": "Survival probability should not increase over time."
+  },
+  {
+    "check_name": "value_risk_quadrant_curve_created",
+    "status": "PASS",
+    "value": 5,
+    "notes": "Value/risk survival curves should cover multiple strategic groups."
+  },
+  {
+    "check_name": "model_priority_segments_not_empty",
+    "status": "PASS",
+    "value": 113,
+    "notes": "Lifecycle model-priority segments should not be empty."
+  }
+]

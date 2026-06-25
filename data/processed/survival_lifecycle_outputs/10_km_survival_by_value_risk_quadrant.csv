@@ -1,0 +1,110 @@
+month_index,customers_at_risk,churn_events,censored_customers,hazard_rate,survival_probability,group_size,value_risk_quadrant,group_label
+1,179814,31793,111567,0.17681048194245164,0.8231895180575484,179814,High risk / high value,High risk / high value
+2,36454,5005,24026,0.13729631864815933,0.7101686276784945,179814,High risk / high value,High risk / high value
+3,7423,2491,87,0.3355786070321972,0.47185122884417824,179814,High risk / high value,High risk / high value
+4,4845,842,11,0.1737874097007224,0.3898494260192457,179814,High risk / high value,High risk / high value
+5,3992,362,3,0.0906813627254509,0.35449734881008566,179814,High risk / high value,High risk / high value
+6,3627,257,1,0.07085745795423215,0.32937856782188824,179814,High risk / high value,High risk / high value
+7,3369,192,1,0.05699020480854853,0.31060721578217243,179814,High risk / high value,High risk / high value
+8,3176,164,2,0.05163727959697733,0.2945683041359897,179814,High risk / high value,High risk / high value
+9,3010,111,0,0.036877076411960134,0.2837054862758253,179814,High risk / high value,High risk / high value
+10,2899,197,3,0.06795446705760608,0.2644264311546326,179814,High risk / high value,High risk / high value
+11,2699,69,0,0.0255650240829937,0.25766636307398433,179814,High risk / high value,High risk / high value
+12,2630,90,1,0.034220532319391636,0.24884888296879096,179814,High risk / high value,High risk / high value
+13,2539,28,4,0.011027963765261915,0.24610458650438521,179814,High risk / high value,High risk / high value
+14,2507,34,31,0.013562026326286399,0.2427669096231929,179814,High risk / high value,High risk / high value
+15,2442,20,44,0.00819000819000819,0.24077864664511597,179814,High risk / high value,High risk / high value
+16,2378,42,223,0.017661900756938603,0.23652603808367995,179814,High risk / high value,High risk / high value
+17,2113,42,371,0.019876952200662566,0.23182462133047854,179814,High risk / high value,High risk / high value
+18,1700,19,321,0.011176470588235295,0.22923364026854964,179814,High risk / high value,High risk / high value
+19,1360,25,148,0.01838235294117647,0.22501978658714247,179814,High risk / high value,High risk / high value
+20,1187,18,128,0.015164279696714406,0.22160752360604005,179814,High risk / high value,High risk / high value
+21,1041,23,131,0.022094140249759846,0.21671129589908622,179814,High risk / high value,High risk / high value
+22,887,9,121,0.010146561443066516,0.2145124214198396,179814,High risk / high value,High risk / high value
+23,757,10,108,0.013210039630118891,0.21167870383173074,179814,High risk / high value,High risk / high value
+24,639,10,69,0.01564945226917058,0.20836604805971617,179814,High risk / high value,High risk / high value
+25,560,33,302,0.05892857142857143,0.19608733451334004,179814,High risk / high value,High risk / high value
+26,225,4,44,0.017777777777777778,0.1926013374553251,179814,High risk / high value,High risk / high value
+27,177,8,169,0.04519774011299435,0.18389619225960419,179814,High risk / high value,High risk / high value
+1,46586,33080,10882,0.7100845747649508,0.2899154252350492,46586,High risk / low value,High risk / low value
+2,2624,748,690,0.2850609756097561,0.20727185127322878,46586,High risk / low value,High risk / low value
+3,1186,212,9,0.178752107925801,0.17022157094445603,46586,High risk / low value,High risk / low value
+4,965,163,10,0.1689119170984456,0.14146911906471887,46586,High risk / low value,High risk / low value
+5,792,112,1,0.1414141414141414,0.12146338505556671,46586,High risk / low value,High risk / low value
+6,679,78,0,0.11487481590574374,0.10751030105802002,46586,High risk / low value,High risk / low value
+7,601,43,0,0.07154742096505824,0.09981821629014172,46586,High risk / low value,High risk / low value
+8,558,21,0,0.03763440860215054,0.09606161675234069,46586,High risk / low value,High risk / low value
+9,537,35,0,0.06517690875232775,0.08980061752267231,46586,High risk / low value,High risk / low value
+10,502,20,0,0.0398406374501992,0.08622290367714752,46586,High risk / low value,High risk / low value
+11,482,24,0,0.04979253112033195,0.08192964706251776,46586,High risk / low value,High risk / low value
+12,458,14,0,0.03056768558951965,0.07942524737065042,46586,High risk / low value,High risk / low value
+13,444,14,1,0.03153153153153153,0.07692084767878306,46586,High risk / low value,High risk / low value
+14,429,22,40,0.05128205128205128,0.07297618882346085,46586,High risk / low value,High risk / low value
+15,367,4,26,0.010899182561307902,0.07218080801884547,46586,High risk / low value,High risk / low value
+16,337,7,121,0.020771513353115726,0.07068150340124334,46586,High risk / low value,High risk / low value
+17,209,3,40,0.014354066985645933,0.06966693636677573,46586,High risk / low value,High risk / low value
+18,166,1,16,0.006024096385542169,0.06924725602721685,46586,High risk / low value,High risk / low value
+19,149,1,16,0.006711409395973154,0.06878250934247043,46586,High risk / low value,High risk / low value
+20,132,0,16,0.0,0.06878250934247043,46586,High risk / low value,High risk / low value
+21,116,0,32,0.0,0.06878250934247043,46586,High risk / low value,High risk / low value
+22,84,1,24,0.011904761904761904,0.06796366994553626,46586,High risk / low value,High risk / low value
+23,59,0,15,0.0,0.06796366994553626,46586,High risk / low value,High risk / low value
+24,44,0,2,0.0,0.06796366994553626,46586,High risk / low value,High risk / low value
+25,42,1,37,0.023809523809523808,0.0663454873277854,46586,High risk / low value,High risk / low value
+26,4,0,1,0.0,0.0663454873277854,46586,High risk / low value,High risk / low value
+27,3,0,3,0.0,0.0663454873277854,46586,High risk / low value,High risk / low value
+1,22452,6,22446,0.0002672367717797969,0.9997327632282202,22452,Low risk / high value,Low risk / high value
+1,186118,1004,159684,0.005394427191351723,0.9946055728086483,186118,Medium risk / high value,Medium risk / high value
+2,25430,183,23797,0.007196224931183642,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+3,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+4,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+5,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+6,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+7,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+8,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+9,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+10,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+11,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+12,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+13,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+14,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+15,1450,0,0,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+16,1450,0,1,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+17,1449,0,170,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+18,1279,0,291,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+19,988,0,165,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+20,823,0,145,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+21,678,0,161,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+22,517,0,128,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+23,389,0,88,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+24,301,0,40,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+25,261,0,179,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+26,82,0,22,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+27,60,0,60,0.0,0.9874481673889085,186118,Medium risk / high value,Medium risk / high value
+1,535990,5353,502873,0.009987126625496744,0.9900128733745033,535990,Standard lifecycle population,Standard lifecycle population
+2,27764,1786,22411,0.06432790664169429,0.9263274176819927,535990,Standard lifecycle population,Standard lifecycle population
+3,3567,1210,36,0.3392206335856462,0.6120980441481515,535990,Standard lifecycle population,Standard lifecycle population
+4,2321,370,20,0.15941404566996983,0.5145210185838188,535990,Standard lifecycle population,Standard lifecycle population
+5,1931,376,3,0.19471776281719316,0.41433463692275413,535990,Standard lifecycle population,Standard lifecycle population
+6,1552,95,1,0.061211340206185565,0.38897265850286905,535990,Standard lifecycle population,Standard lifecycle population
+7,1456,106,0,0.07280219780219781,0.36065459407889644,535990,Standard lifecycle population,Standard lifecycle population
+8,1350,69,0,0.051111111111111114,0.3422211370481973,535990,Standard lifecycle population,Standard lifecycle population
+9,1281,57,0,0.04449648711943794,0.32699349863153276,535990,Standard lifecycle population,Standard lifecycle population
+10,1224,48,1,0.0392156862745098,0.31417022417539425,535990,Standard lifecycle population,Standard lifecycle population
+11,1175,36,1,0.030638297872340424,0.3045445832644886,535990,Standard lifecycle population,Standard lifecycle population
+12,1138,46,0,0.040421792618629174,0.29223434527664455,535990,Standard lifecycle population,Standard lifecycle population
+13,1092,4,0,0.003663003663003663,0.29116388979944074,535990,Standard lifecycle population,Standard lifecycle population
+14,1088,19,84,0.017463235294117647,0.2860792262827226,535990,Standard lifecycle population,Standard lifecycle population
+15,985,9,75,0.009137055837563452,0.28346530441821044,535990,Standard lifecycle population,Standard lifecycle population
+16,901,15,366,0.016648168701442843,0.2787461262092502,535990,Standard lifecycle population,Standard lifecycle population
+17,520,4,211,0.007692307692307693,0.2766019252384098,535990,Standard lifecycle population,Standard lifecycle population
+18,305,5,34,0.01639344262295082,0.27206746744761623,535990,Standard lifecycle population,Standard lifecycle population
+19,266,3,31,0.011278195488721804,0.2689990373636206,535990,Standard lifecycle population,Standard lifecycle population
+20,232,4,21,0.017241379310344827,0.26436112292631675,535990,Standard lifecycle population,Standard lifecycle population
+21,207,3,34,0.014492753623188406,0.26052980230419626,535990,Standard lifecycle population,Standard lifecycle population
+22,170,3,33,0.01764705882352941,0.2559322175576516,535990,Standard lifecycle population,Standard lifecycle population
+23,134,3,31,0.022388059701492536,0.25020239179143555,535990,Standard lifecycle population,Standard lifecycle population
+24,100,3,7,0.03,0.24269632003769248,535990,Standard lifecycle population,Standard lifecycle population
+25,90,6,47,0.06666666666666667,0.22651656536851297,535990,Standard lifecycle population,Standard lifecycle population
+26,37,1,9,0.02702702702702703,0.22039449603422884,535990,Standard lifecycle population,Standard lifecycle population
+27,27,1,26,0.037037037037037035,0.21223173692185002,535990,Standard lifecycle population,Standard lifecycle population

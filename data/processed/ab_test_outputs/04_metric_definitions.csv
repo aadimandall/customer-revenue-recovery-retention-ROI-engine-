@@ -1,0 +1,7 @@
+metric_name,metric_type,definition,direction,why_it_matters
+Incremental churn reduction,Primary statistical metric,Control churn rate minus treatment churn rate over the measurement window.,Higher is better,Shows whether the offer actually reduces churn versus a holdout.
+Incremental net save value proxy,Primary business metric,Incremental saved CLV proxy minus treatment campaign cost.,Higher is better,Prevents a campaign from being judged successful only because churn fell.
+Break-even response rate,Economic guardrail,Treatment campaign cost divided by gross value at risk proxy.,Lower is better,Shows the minimum response needed for the campaign to pay for itself.
+Treatment ROI proxy,Business guardrail,Treatment net save value proxy divided by treatment campaign cost proxy.,Higher is better,Summarizes whether the campaign is worth scaling.
+Customer experience guardrail,Operational guardrail,"Monitor complaint rate, support contact rate, refund pressure, and offer abuse.",Lower is better,A profitable-looking campaign can still damage customer experience.
+Offer cannibalization check,Commercial guardrail,Track whether customers who would have stayed anyway are taking unnecessary discounts.,Lower is better,Protects margin from over-discounting.

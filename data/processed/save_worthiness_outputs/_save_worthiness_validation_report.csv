@@ -1,0 +1,9 @@
+check_name,status,value,notes
+scored_output_not_empty,PASS,970960.0,Save-worthiness scored customer output should not be empty.
+one_row_per_customer,PASS,0.0,There should be one save-worthiness row per customer.
+no_negative_scores,PASS,0.0,Save-worthiness score should be non-negative.
+score_max_not_above_100,PASS,100.0,Save-worthiness score should be capped at 100.
+positive_paid_offer_count,PASS,71437.0,There should be at least some economically positive paid-offer candidates.
+paid_offer_net_value_positive,PASS,15828925.2,Paid-offer candidate pool should have positive expected net value.
+suppression_group_exists,PASS,38881.0,The engine should identify customers who should not receive paid offers.
+decile_output_created,PASS,10.0,Save-worthiness decile output should have ten deciles if paid-offer candidates exist.

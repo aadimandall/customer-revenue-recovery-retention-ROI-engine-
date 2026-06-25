@@ -1,0 +1,7 @@
+check_name,status,value,notes
+strategy_scenario_matrix_not_empty,PASS,60.0,ROI matrix should contain strategy/scenario rows.
+base_best_strategy_positive_net_value,PASS,15828925.2,Best base strategy should have positive net value.
+base_best_strategy_positive_roi,PASS,20.004108,Best base strategy should have positive ROI.
+best_strategy_by_scenario_created,PASS,5.0,There should be at least one best strategy row by scenario.
+budget_frontier_created,PASS,7.0,Budget frontier should have one row per budget cap.
+no_negative_campaign_cost,PASS,11566.8,Campaign costs should not be negative.

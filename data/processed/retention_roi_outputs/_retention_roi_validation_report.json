@@ -1,0 +1,38 @@
+[
+  {
+    "check_name": "strategy_scenario_matrix_not_empty",
+    "status": "PASS",
+    "value": 60,
+    "notes": "ROI matrix should contain strategy/scenario rows."
+  },
+  {
+    "check_name": "base_best_strategy_positive_net_value",
+    "status": "PASS",
+    "value": 15828925.2,
+    "notes": "Best base strategy should have positive net value."
+  },
+  {
+    "check_name": "base_best_strategy_positive_roi",
+    "status": "PASS",
+    "value": 20.004108,
+    "notes": "Best base strategy should have positive ROI."
+  },
+  {
+    "check_name": "best_strategy_by_scenario_created",
+    "status": "PASS",
+    "value": 5,
+    "notes": "There should be at least one best strategy row by scenario."
+  },
+  {
+    "check_name": "budget_frontier_created",
+    "status": "PASS",
+    "value": 7,
+    "notes": "Budget frontier should have one row per budget cap."
+  },
+  {
+    "check_name": "no_negative_campaign_cost",
+    "status": "PASS",
+    "value": 11566.8,
+    "notes": "Campaign costs should not be negative."
+  }
+]

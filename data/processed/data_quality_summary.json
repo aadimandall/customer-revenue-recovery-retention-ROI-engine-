@@ -1,0 +1,16 @@
+{
+  "train_rows": 970960,
+  "train_unique_users": 970960,
+  "churn_rate": 0.08994191315811156,
+  "members_rows_filtered_to_train_users": 860967,
+  "transactions_rows_filtered_to_train_users": 1132036,
+  "transaction_unique_users": 933578,
+  "user_log_monthly_rows": 754551,
+  "user_log_unique_users": 754551,
+  "raw_files_used": [
+    "members_v3.csv",
+    "train_v2.csv",
+    "transactions_v2.csv",
+    "user_logs_v2.csv"
+  ]
+}

@@ -1,0 +1,7 @@
+check_name,status,value,notes
+clv_table_not_empty,PASS,970960,Customer CLV table should contain rows.
+one_row_per_customer,PASS,"rows=970960, unique_users=970960",CLV layer should have one row per customer.
+no_duplicate_customers,PASS,0,There should be no duplicate customer IDs in the CLV output.
+no_null_clv_values,PASS,0,Profit-adjusted CLV proxy should be populated for every customer.
+no_negative_value_metrics,PASS,0,"Revenue, margin, and CLV proxy values should not be negative."
+all_customers_have_value_tiers,PASS,0,"Every customer should have a value tier, action group, and budget tier."

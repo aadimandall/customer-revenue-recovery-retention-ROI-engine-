@@ -1,0 +1,8 @@
+check_name,status,value,notes
+lifecycle_base_not_empty,PASS,970960,Lifecycle base should contain customer rows.
+one_row_per_customer,PASS,0,Lifecycle survival base should have one row per customer.
+positive_lifecycle_duration,PASS,1,Lifecycle duration should be at least one month.
+overall_survival_curve_created,PASS,27,Overall Kaplan-Meier style survival curve should exist.
+overall_survival_non_increasing,PASS,True,Survival probability should not increase over time.
+value_risk_quadrant_curve_created,PASS,5,Value/risk survival curves should cover multiple strategic groups.
+model_priority_segments_not_empty,PASS,113,Lifecycle model-priority segments should not be empty.

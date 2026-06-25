@@ -1,0 +1,5 @@
+governance_check,status,value,readout
+forbidden_features_not_used,PASS,None,"Target, future-churned value, and final action fields should not be model predictors."
+business_value_used_after_scoring,PASS,"clv_value_tier, future_churned_clv_proxy, profit_adjusted_clv_proxy, retention_budget_tier, value_based_action_group","CLV and future-churned value should be used for validation after scoring, not as model inputs."
+sensitivity_model_trained,PASS,Included a challenger model that excludes direct cancellation signals.,A no-cancellation-signal challenger helps test whether the model is too dependent on obvious cancel flags.
+model_output_not_final_targeting,PASS,Churn risk only,The model ranks churn risk. Save-worthiness and ROI decide final retention actions.

@@ -1,0 +1,10 @@
+section,metric,value,display_value,readout
+Experiment overview,Candidate customers,62836.0,"62,836",Efficient-frontier save-worthy population selected for testing.
+Experiment overview,Treatment customers,31430.0,"31,430",Customers assigned to receive retention intervention.
+Experiment overview,Control customers,31406.0,"31,406",Holdout customers for causal measurement.
+Expected impact,Expected customers saved in treatment,2331.9314049425,"2,332",Planning estimate before A/B validation.
+Expected impact,Treatment expected net save value proxy,7933465.941717556,"7,933,466",Expected net value for the treatment arm only.
+Expected impact,Treatment ROI proxy,21.14909916798139,21.15x,Planning ROI for test treatment arm.
+Power,Approximate power for base effect,1.0,100.00%,Approximate two-proportion power for planned churn reduction.
+Power,Required sample per group at 80% power,677.0,677,Planning requirement for the base expected response scenario.
+Budget,Recommended rollout budget cap proxy,750000.0,"750,000",Budget frontier selected from ROI simulation.

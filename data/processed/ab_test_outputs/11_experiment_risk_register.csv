@@ -1,0 +1,7 @@
+risk_area,risk_description,mitigation,owner
+Response-rate uncertainty,Planning response rates may overstate actual customer behavior.,Use conservative response scenarios and require positive observed net value before rollout.,Analytics + lifecycle marketing
+Offer cannibalization,Some customers may accept discounts even though they would have stayed.,"Use a holdout group and track incremental saved CLV, not just redemption.",Marketing strategy
+Customer experience,"Retention offers can create complaints, refund pressure, or perceived unfairness.","Track support contacts, complaints, refund requests, and opt-out behavior as guardrails.",Customer operations
+Implementation leakage,Treatment rules may accidentally reach control customers or suppress eligible customers.,Use deterministic customer-level assignment and preserve the assignment file.,Data engineering
+Segment imbalance,Treatment and control groups may differ across high-value or high-risk customer segments.,Use stratified randomization and review balance diagnostics before launch.,Analytics
+Short-term measurement bias,A short readout window may miss delayed churn or delayed response.,Report early readout separately from final readout and keep lifecycle windows consistent.,Experiment owner

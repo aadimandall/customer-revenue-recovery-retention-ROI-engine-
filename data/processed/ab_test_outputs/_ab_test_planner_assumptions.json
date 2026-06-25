@@ -1,0 +1,24 @@
+{
+  "randomization_seed": "customer_revenue_recovery_ab_test_v1",
+  "primary_alpha": 0.05,
+  "default_treatment_share": 0.5,
+  "response_multiplier_scenarios": [
+    [
+      "Half expected response",
+      0.5
+    ],
+    [
+      "Conservative expected response",
+      0.7
+    ],
+    [
+      "Base expected response",
+      1.0
+    ],
+    [
+      "Upside expected response",
+      1.25
+    ]
+  ],
+  "note": "This script designs the experiment. It does not claim the campaign has already worked."
+}

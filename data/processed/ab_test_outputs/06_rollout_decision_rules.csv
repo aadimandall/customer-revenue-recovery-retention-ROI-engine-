@@ -1,0 +1,7 @@
+decision_stage,rule_name,decision_rule,pass_condition
+Launch test,Population quality,Use the efficient-frontier save-worthy population rather than a blanket churn-risk list.,Candidate pool has positive expected net value and valid treatment/control split.
+Readout,Primary statistical success,Treatment churn rate should be lower than control churn rate.,Target planning lift is about 7.41% absolute churn reduction.
+Readout,Business success,Incremental saved CLV proxy should exceed campaign cost.,Observed net save value proxy is positive.
+Readout,Break-even response,Observed response should clear break-even economics.,Observed response rate exceeds approximately 0.61%.
+Scale,Scale decision,"Scale only if statistical lift, positive net value, and customer-experience guardrails all pass.",Do not scale from churn reduction alone.
+Stop,Kill condition,"Stop or redesign if lift is weak, economics are negative, or complaints/refunds rise.",A failed test is a valid result if it prevents bad retention spend.

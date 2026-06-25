@@ -1,0 +1,11 @@
+check_name,status,value,notes
+best_model_exists,PASS,hist_gradient_boosting,Best model should be identified.
+roc_auc_above_random,PASS,0.980842,ROC-AUC should beat random ranking.
+pr_auc_above_base_rate,PASS,10.17441,PR-AUC should beat the base churn rate.
+top_decile_lift_above_one,PASS,8.858098,Top decile should concentrate churn risk.
+top_decile_captures_more_than_population_share,PASS,0.88581,Top decile should capture more than 10% of churners.
+threshold_table_has_top20,PASS,True,Threshold table should include top 20% planning point.
+calibration_table_created,PASS,10,Calibration diagnostic should have multiple bins.
+average_abs_calibration_gap_reasonable,PASS,0.000726,Average calibration gap should be reasonable for planning.
+governance_checks_no_failures,PASS,0,Governance checks should not contain failures.
+feature_importance_governance_created,PASS,20,Feature-importance governance output should exist.

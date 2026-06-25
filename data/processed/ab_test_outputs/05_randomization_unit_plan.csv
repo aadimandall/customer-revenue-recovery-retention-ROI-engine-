@@ -1,0 +1,7 @@
+plan_component,value,readout
+Randomization unit,Customer account / msno,Randomize at the customer level so one customer cannot appear in both groups.
+Randomization seed,customer_revenue_recovery_ab_test_v1,Stable seed makes the assignment reproducible.
+Treatment group,31430,Customers assigned to receive the recommended retention intervention.
+Control group,31406,Holdout customers used to measure incremental lift.
+Balance check,50.02% treatment share,Near 50/50 allocation keeps the first test simple and defensible.
+Stratification note,"Monitor balance by save priority tier, churn risk tier, CLV tier, and lifecycle stage.",The output includes segment readiness checks to verify group balance.

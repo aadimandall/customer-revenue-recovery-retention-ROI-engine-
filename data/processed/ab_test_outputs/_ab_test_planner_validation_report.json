@@ -1,0 +1,74 @@
+[
+  {
+    "check_name": "experiment_population_not_empty",
+    "status": "PASS",
+    "value": 62836,
+    "notes": "A/B candidate population should not be empty."
+  },
+  {
+    "check_name": "one_row_per_customer",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Each customer should appear once in the A/B plan."
+  },
+  {
+    "check_name": "treatment_and_control_exist",
+    "status": "PASS",
+    "value": "treatment=31430, control=31406",
+    "notes": "Both treatment and control groups are required."
+  },
+  {
+    "check_name": "randomization_balance_reasonable",
+    "status": "PASS",
+    "value": 0.5002,
+    "notes": "Treatment share should be close to 50%."
+  },
+  {
+    "check_name": "expected_test_net_value_positive",
+    "status": "PASS",
+    "value": 7933465.94,
+    "notes": "Treatment arm should have positive expected net save value."
+  },
+  {
+    "check_name": "power_scenarios_created",
+    "status": "PASS",
+    "value": 12,
+    "notes": "Power and sample-size scenarios should exist."
+  },
+  {
+    "check_name": "metric_definitions_created",
+    "status": "PASS",
+    "value": 6,
+    "notes": "Metric definitions should include primary, business, and guardrail metrics."
+  },
+  {
+    "check_name": "treatment_plan_groups_sum_to_population",
+    "status": "PASS",
+    "value": 62836,
+    "notes": "Treatment/control summary should match experiment population."
+  },
+  {
+    "check_name": "balance_diagnostics_created",
+    "status": "PASS",
+    "value": 8,
+    "notes": "Treatment/control balance diagnostics should exist."
+  },
+  {
+    "check_name": "max_standardized_difference_reasonable",
+    "status": "PASS",
+    "value": 0.003967,
+    "notes": "Treatment/control groups should be balanced on key planning features."
+  },
+  {
+    "check_name": "mde_readout_created",
+    "status": "PASS",
+    "value": 8,
+    "notes": "Minimum detectable effect readout should exist."
+  },
+  {
+    "check_name": "risk_register_created",
+    "status": "PASS",
+    "value": 6,
+    "notes": "Experiment risk register should include practical launch risks."
+  }
+]

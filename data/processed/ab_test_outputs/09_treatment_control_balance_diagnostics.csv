@@ -1,0 +1,9 @@
+balance_feature,treatment_mean,control_mean,absolute_difference,standardized_difference,balance_status,readout
+predicted_churn_probability,0.648223741899286,0.6480803090904077,0.00014343280887829657,0.00036586636787210166,Balanced,Treatment/control groups are balanced on this feature.
+save_worthiness_score,56.04206178147673,55.998069240345586,0.04399254113114637,0.0017324938059217585,Balanced,Treatment/control groups are balanced on this feature.
+profit_adjusted_clv_proxy,2475.6572621433875,2468.312080706447,7.345181436940493,0.002453620896393218,Balanced,Treatment/control groups are balanced on this feature.
+gross_value_at_risk_proxy,1969.8884539024737,1962.4362142320783,7.452239670395329,0.0023689823051131704,Balanced,Treatment/control groups are balanced on this feature.
+expected_intervention_response_rate,0.10303165765192496,0.10304416353563019,-1.2505883705229981e-05,-0.00027842741516330053,Balanced,Treatment/control groups are balanced on this feature.
+intervention_cost_proxy,11.935117721921731,11.93635770234987,-0.001239980428138665,-0.0001707255248158432,Balanced,Treatment/control groups are balanced on this feature.
+net_save_value_proxy,252.41698828245484,251.3254679740303,1.091520308424549,0.002465838799441106,Balanced,Treatment/control groups are balanced on this feature.
+actual_future_churn_label,0.6536430162265352,0.6517544418264026,0.00188857440013257,0.003966600580882254,Balanced,Treatment/control groups are balanced on this feature.

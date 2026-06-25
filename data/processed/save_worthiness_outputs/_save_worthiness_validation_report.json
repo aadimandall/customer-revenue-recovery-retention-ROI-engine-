@@ -1,0 +1,50 @@
+[
+  {
+    "check_name": "scored_output_not_empty",
+    "status": "PASS",
+    "value": 970960,
+    "notes": "Save-worthiness scored customer output should not be empty."
+  },
+  {
+    "check_name": "one_row_per_customer",
+    "status": "PASS",
+    "value": 0,
+    "notes": "There should be one save-worthiness row per customer."
+  },
+  {
+    "check_name": "no_negative_scores",
+    "status": "PASS",
+    "value": 0.0,
+    "notes": "Save-worthiness score should be non-negative."
+  },
+  {
+    "check_name": "score_max_not_above_100",
+    "status": "PASS",
+    "value": 100.0,
+    "notes": "Save-worthiness score should be capped at 100."
+  },
+  {
+    "check_name": "positive_paid_offer_count",
+    "status": "PASS",
+    "value": 71437,
+    "notes": "There should be at least some economically positive paid-offer candidates."
+  },
+  {
+    "check_name": "paid_offer_net_value_positive",
+    "status": "PASS",
+    "value": 15828925.2,
+    "notes": "Paid-offer candidate pool should have positive expected net value."
+  },
+  {
+    "check_name": "suppression_group_exists",
+    "status": "PASS",
+    "value": 38881,
+    "notes": "The engine should identify customers who should not receive paid offers."
+  },
+  {
+    "check_name": "decile_output_created",
+    "status": "PASS",
+    "value": 10,
+    "notes": "Save-worthiness decile output should have ten deciles if paid-offer candidates exist."
+  }
+]

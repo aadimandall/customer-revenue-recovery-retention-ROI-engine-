@@ -1,0 +1,492 @@
+-- 00_revenue_leakage_portfolio_summary
+SELECT
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(monthly_margin_baseline) AS monthly_margin_baseline_proxy,
+            SUM(annual_revenue_run_rate_proxy) AS annual_revenue_run_rate_proxy,
+            SUM(annual_margin_run_rate_proxy) AS annual_margin_run_rate_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            SUM(CASE WHEN churn_next_period = 1 THEN monthly_value_baseline ELSE 0 END)
+                AS future_churned_monthly_revenue_proxy,
+            SUM(CASE WHEN churn_next_period = 1 THEN monthly_margin_baseline ELSE 0 END)
+                AS future_churned_monthly_margin_proxy
+        FROM customer_clv;
+
+-- 01_value_leakage_by_clv_tier
+SELECT
+            clv_value_tier,
+            retention_budget_tier,
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(monthly_margin_baseline) AS monthly_margin_baseline_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            AVG(engagement_score) AS avg_engagement_score,
+            AVG(auto_renew_signal) AS auto_renew_rate,
+            AVG(cancellation_signal) AS cancellation_signal_rate
+        FROM customer_clv
+        GROUP BY
+            clv_value_tier,
+            retention_budget_tier
+        ORDER BY future_churned_clv_proxy DESC;
+
+-- 02_value_leakage_by_action_group
+SELECT
+            value_based_action_group,
+            retention_budget_tier,
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(monthly_margin_baseline) AS monthly_margin_baseline_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            AVG(engagement_score) AS avg_engagement_score,
+            AVG(auto_renew_signal) AS auto_renew_rate,
+            AVG(cancellation_signal) AS cancellation_signal_rate,
+            AVG(no_recent_activity_flag) AS no_recent_activity_rate,
+            AVG(major_activity_drop_flag) AS major_activity_drop_rate
+        FROM customer_clv
+        GROUP BY
+            value_based_action_group,
+            retention_budget_tier
+        ORDER BY future_churned_clv_proxy DESC;
+
+-- 03_value_leakage_segment_matrix
+SELECT
+            lifecycle_stage,
+            engagement_tier,
+            revenue_tier,
+            clv_value_tier,
+            value_based_action_group,
+            retention_budget_tier,
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            AVG(engagement_score) AS avg_engagement_score,
+            AVG(active_days) AS avg_active_days,
+            AVG(auto_renew_signal) AS auto_renew_rate,
+            AVG(cancellation_signal) AS cancellation_signal_rate,
+            AVG(no_recent_activity_flag) AS no_recent_activity_rate,
+            AVG(major_activity_drop_flag) AS major_activity_drop_rate
+        FROM customer_clv
+        GROUP BY
+            lifecycle_stage,
+            engagement_tier,
+            revenue_tier,
+            clv_value_tier,
+            value_based_action_group,
+            retention_budget_tier
+        HAVING COUNT(*) >= 500
+        ORDER BY future_churned_clv_proxy DESC;
+
+-- 04_clv_concentration_deciles
+WITH ranked AS (
+            SELECT
+                *,
+                NTILE(10) OVER (ORDER BY profit_adjusted_clv_proxy DESC) AS clv_rank_decile
+            FROM customer_clv
+        ),
+
+        decile_summary AS (
+            SELECT
+                clv_rank_decile,
+                COUNT(*) AS customers,
+                AVG(churn_next_period) AS future_churn_rate,
+                SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+                SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+                AVG(profit_adjusted_clv_proxy) AS avg_profit_adjusted_clv_proxy,
+                AVG(monthly_value_baseline) AS avg_monthly_value_baseline,
+                AVG(engagement_score) AS avg_engagement_score,
+                AVG(auto_renew_signal) AS auto_renew_rate,
+                AVG(cancellation_signal) AS cancellation_signal_rate
+            FROM ranked
+            GROUP BY clv_rank_decile
+        ),
+
+        with_shares AS (
+            SELECT
+                *,
+                profit_adjusted_clv_proxy
+                    / NULLIF(SUM(profit_adjusted_clv_proxy) OVER (), 0)
+                    AS clv_share,
+                future_churned_clv_proxy
+                    / NULLIF(SUM(future_churned_clv_proxy) OVER (), 0)
+                    AS future_churned_clv_share
+            FROM decile_summary
+        )
+
+        SELECT
+            *,
+            SUM(clv_share) OVER (
+                ORDER BY clv_rank_decile
+                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+            ) AS cumulative_clv_share,
+            SUM(future_churned_clv_share) OVER (
+                ORDER BY clv_rank_decile
+                ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+            ) AS cumulative_future_churned_clv_share
+        FROM with_shares
+        ORDER BY clv_rank_decile;
+
+-- 05_revenue_leakage_driver_scores
+WITH segment_base AS (
+            SELECT
+                lifecycle_stage,
+                engagement_tier,
+                revenue_tier,
+                clv_value_tier,
+                value_based_action_group,
+                retention_budget_tier,
+                COUNT(*) AS customers,
+                AVG(churn_next_period) AS future_churn_rate,
+                SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+                SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+                AVG(engagement_score) AS avg_engagement_score,
+                AVG(active_days) AS avg_active_days,
+                AVG(auto_renew_signal) AS auto_renew_rate,
+                AVG(cancellation_signal) AS cancellation_signal_rate,
+                AVG(no_recent_activity_flag) AS no_recent_activity_rate,
+                AVG(major_activity_drop_flag) AS major_activity_drop_rate
+            FROM customer_clv
+            GROUP BY
+                lifecycle_stage,
+                engagement_tier,
+                revenue_tier,
+                clv_value_tier,
+                value_based_action_group,
+                retention_budget_tier
+            HAVING COUNT(*) >= 500
+        )
+
+        SELECT
+            *,
+            future_churned_clv_proxy
+                * (1 + cancellation_signal_rate)
+                * (1 + major_activity_drop_rate)
+                AS leakage_priority_score,
+
+            CASE
+                WHEN retention_budget_tier = 'Premium save budget'
+                    AND future_churn_rate >= 0.10
+                    THEN 'Model should prioritize'
+                WHEN value_based_action_group = 'Suppress paid offer'
+                    THEN 'Suppress from paid retention'
+                WHEN cancellation_signal_rate >= 0.50
+                    THEN 'Win-back strategy needed'
+                WHEN no_recent_activity_rate >= 0.50
+                    THEN 'Reactivation strategy needed'
+                WHEN future_churn_rate < 0.03
+                    THEN 'Monitor, do not overspend'
+                ELSE 'Watchlist segment'
+            END AS leakage_strategy_readout
+        FROM segment_base
+        ORDER BY leakage_priority_score DESC;
+
+-- 06_retention_budget_pressure
+SELECT
+            retention_budget_tier,
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(monthly_margin_baseline) AS monthly_margin_baseline_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            AVG(engagement_score) AS avg_engagement_score,
+            AVG(cancellation_signal) AS cancellation_signal_rate
+        FROM customer_clv
+        GROUP BY retention_budget_tier
+        ORDER BY future_churned_clv_proxy DESC;
+
+-- 07_monthly_value_leakage_trend
+SELECT
+            cm.snapshot_month,
+            COUNT(DISTINCT cm.msno) AS observed_customers,
+            SUM(cm.monthly_revenue) AS observed_monthly_revenue_proxy,
+            SUM(cm.monthly_revenue * c.gross_margin_rate) AS observed_monthly_margin_proxy,
+            AVG(cm.churn_next_period) AS future_churn_label_rate,
+            SUM(CASE WHEN cm.churn_next_period = 1 THEN cm.monthly_revenue ELSE 0 END)
+                AS future_churned_monthly_revenue_proxy,
+            SUM(CASE WHEN cm.churn_next_period = 1 THEN cm.monthly_revenue * c.gross_margin_rate ELSE 0 END)
+                AS future_churned_monthly_margin_proxy,
+            AVG(cm.engagement_score) AS avg_engagement_score,
+            AVG(cm.had_cancel) AS cancel_signal_rate
+        FROM customer_month cm
+        LEFT JOIN customer_clv c
+            ON cm.msno = c.msno
+        GROUP BY cm.snapshot_month
+        ORDER BY cm.snapshot_month;
+
+-- 08_tableau_revenue_leakage_base
+SELECT
+            lifecycle_stage,
+            engagement_tier,
+            revenue_tier,
+            clv_value_tier,
+            value_based_action_group,
+            retention_budget_tier,
+            COUNT(*) AS customers,
+            AVG(churn_next_period) AS future_churn_rate,
+            SUM(monthly_value_baseline) AS monthly_revenue_baseline_proxy,
+            SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+            CASE
+                WHEN SUM(profit_adjusted_clv_proxy) > 0
+                THEN SUM(future_churned_clv_proxy) / SUM(profit_adjusted_clv_proxy)
+                ELSE NULL
+            END AS clv_leakage_rate,
+            AVG(engagement_score) AS avg_engagement_score,
+            AVG(active_days) AS avg_active_days,
+            AVG(auto_renew_signal) AS auto_renew_rate,
+            AVG(cancellation_signal) AS cancellation_signal_rate,
+            AVG(no_recent_activity_flag) AS no_recent_activity_rate,
+            AVG(major_activity_drop_flag) AS major_activity_drop_rate
+        FROM customer_clv
+        GROUP BY
+            lifecycle_stage,
+            engagement_tier,
+            revenue_tier,
+            clv_value_tier,
+            value_based_action_group,
+            retention_budget_tier
+        HAVING COUNT(*) >= 250
+        ORDER BY future_churned_clv_proxy DESC;
+
+-- 09_value_concentration_thresholds
+WITH ranked AS (
+            SELECT
+                *,
+                ROW_NUMBER() OVER (ORDER BY profit_adjusted_clv_proxy DESC) AS value_rank,
+                COUNT(*) OVER () AS total_customers,
+                SUM(profit_adjusted_clv_proxy) OVER () AS portfolio_clv_proxy,
+                SUM(future_churned_clv_proxy) OVER () AS portfolio_future_churned_clv_proxy
+            FROM customer_clv
+        ),
+
+        thresholds AS (
+            SELECT *
+            FROM (
+                VALUES
+                    ('Top 1%', 0.01),
+                    ('Top 5%', 0.05),
+                    ('Top 10%', 0.10),
+                    ('Top 20%', 0.20)
+            ) AS t(threshold_label, threshold_pct)
+        )
+
+        SELECT
+            t.threshold_label,
+            t.threshold_pct,
+            COUNT(*) AS customers,
+            SUM(r.profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+            SUM(r.future_churned_clv_proxy) AS future_churned_clv_proxy,
+            SUM(r.profit_adjusted_clv_proxy) / NULLIF(MAX(r.portfolio_clv_proxy), 0)
+                AS clv_share,
+            SUM(r.future_churned_clv_proxy) / NULLIF(MAX(r.portfolio_future_churned_clv_proxy), 0)
+                AS future_churned_clv_share,
+            AVG(r.churn_next_period) AS future_churn_rate,
+            AVG(r.monthly_value_baseline) AS avg_monthly_value_baseline,
+            AVG(r.engagement_score) AS avg_engagement_score
+        FROM ranked r
+        INNER JOIN thresholds t
+            ON r.value_rank <= CEIL(r.total_customers * t.threshold_pct)
+        GROUP BY
+            t.threshold_label,
+            t.threshold_pct
+        ORDER BY t.threshold_pct;
+
+-- 10_recoverable_value_scenarios
+WITH portfolio AS (
+            SELECT
+                SUM(future_churned_clv_proxy) AS portfolio_future_churned_clv_proxy,
+                SUM(CASE WHEN retention_budget_tier = 'Premium save budget'
+                    THEN future_churned_clv_proxy ELSE 0 END) AS premium_budget_future_churned_clv_proxy,
+                SUM(CASE WHEN retention_budget_tier IN ('Premium save budget', 'Moderate save budget')
+                    THEN future_churned_clv_proxy ELSE 0 END) AS premium_plus_moderate_future_churned_clv_proxy
+            FROM customer_clv
+        ),
+
+        scenarios AS (
+            SELECT *
+            FROM (
+                VALUES
+                    ('Conservative recovery', 0.05),
+                    ('Base recovery', 0.10),
+                    ('Aggressive recovery', 0.15)
+            ) AS s(scenario_name, recovery_rate)
+        )
+
+        SELECT
+            s.scenario_name,
+            s.recovery_rate,
+            p.portfolio_future_churned_clv_proxy,
+            p.portfolio_future_churned_clv_proxy * s.recovery_rate
+                AS recoverable_portfolio_clv_proxy,
+            p.premium_budget_future_churned_clv_proxy,
+            p.premium_budget_future_churned_clv_proxy * s.recovery_rate
+                AS recoverable_premium_budget_clv_proxy,
+            p.premium_plus_moderate_future_churned_clv_proxy,
+            p.premium_plus_moderate_future_churned_clv_proxy * s.recovery_rate
+                AS recoverable_premium_plus_moderate_clv_proxy
+        FROM portfolio p
+        CROSS JOIN scenarios s
+        ORDER BY s.recovery_rate;
+
+-- 11_retention_budget_opportunity
+WITH budget_base AS (
+            SELECT
+                retention_budget_tier,
+                COUNT(*) AS customers,
+                AVG(churn_next_period) AS future_churn_rate,
+                SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+                SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+                AVG(engagement_score) AS avg_engagement_score,
+                AVG(cancellation_signal) AS cancellation_signal_rate
+            FROM customer_clv
+            GROUP BY retention_budget_tier
+        ),
+
+        assumptions AS (
+            SELECT
+                *,
+                CASE retention_budget_tier
+                    WHEN 'Premium save budget' THEN 15.00
+                    WHEN 'Moderate save budget' THEN 6.00
+                    WHEN 'Low-cost save budget' THEN 2.00
+                    WHEN 'Automation only' THEN 0.50
+                    ELSE 0.00
+                END AS campaign_cost_per_customer,
+
+                CASE retention_budget_tier
+                    WHEN 'Premium save budget' THEN 0.12
+                    WHEN 'Moderate save budget' THEN 0.06
+                    WHEN 'Low-cost save budget' THEN 0.03
+                    WHEN 'Automation only' THEN 0.01
+                    ELSE 0.00
+                END AS expected_recovery_rate
+            FROM budget_base
+        ),
+
+        scored AS (
+            SELECT
+                *,
+                customers * campaign_cost_per_customer AS campaign_cost_proxy,
+                future_churned_clv_proxy * expected_recovery_rate AS recoverable_clv_proxy,
+                future_churned_clv_proxy * expected_recovery_rate
+                    - customers * campaign_cost_per_customer AS net_recovery_opportunity_proxy,
+                CASE
+                    WHEN future_churned_clv_proxy > 0
+                    THEN (customers * campaign_cost_per_customer) / future_churned_clv_proxy
+                    ELSE NULL
+                END AS break_even_recovery_rate
+            FROM assumptions
+        )
+
+        SELECT
+            *,
+            CASE
+                WHEN campaign_cost_proxy > 0
+                THEN net_recovery_opportunity_proxy / campaign_cost_proxy
+                ELSE NULL
+            END AS roi_proxy
+        FROM scored
+        ORDER BY net_recovery_opportunity_proxy DESC;
+
+-- 12_model_priority_segments
+WITH segment_base AS (
+            SELECT
+                lifecycle_stage,
+                engagement_tier,
+                revenue_tier,
+                clv_value_tier,
+                value_based_action_group,
+                retention_budget_tier,
+                COUNT(*) AS customers,
+                AVG(churn_next_period) AS future_churn_rate,
+                SUM(profit_adjusted_clv_proxy) AS profit_adjusted_clv_proxy,
+                SUM(future_churned_clv_proxy) AS future_churned_clv_proxy,
+                AVG(monthly_value_baseline) AS avg_monthly_value_baseline,
+                AVG(engagement_score) AS avg_engagement_score,
+                AVG(auto_renew_signal) AS auto_renew_rate,
+                AVG(cancellation_signal) AS cancellation_signal_rate,
+                AVG(no_recent_activity_flag) AS no_recent_activity_rate
+            FROM customer_clv
+            GROUP BY
+                lifecycle_stage,
+                engagement_tier,
+                revenue_tier,
+                clv_value_tier,
+                value_based_action_group,
+                retention_budget_tier
+            HAVING COUNT(*) >= 500
+        )
+
+        SELECT
+            *,
+            future_churned_clv_proxy
+                * (1 + future_churn_rate)
+                * CASE
+                    WHEN retention_budget_tier = 'Premium save budget' THEN 1.50
+                    WHEN retention_budget_tier = 'Moderate save budget' THEN 1.20
+                    WHEN retention_budget_tier = 'Low-cost save budget' THEN 0.80
+                    WHEN retention_budget_tier = 'Automation only' THEN 0.50
+                    ELSE 0.00
+                  END AS model_priority_score,
+
+            CASE
+                WHEN retention_budget_tier = 'Premium save budget'
+                    AND future_churned_clv_proxy > 1000000
+                    THEN 'Highest priority for churn model'
+                WHEN retention_budget_tier = 'Moderate save budget'
+                    AND future_churned_clv_proxy > 1000000
+                    THEN 'Secondary model priority'
+                WHEN value_based_action_group = 'Suppress paid offer'
+                    THEN 'Exclude from paid-retention model action'
+                WHEN retention_budget_tier = 'Automation only'
+                    THEN 'Use for low-cost lifecycle automation'
+                ELSE 'Monitor segment'
+            END AS model_priority_recommendation,
+
+            CASE
+                WHEN retention_budget_tier = 'Premium save budget'
+                    THEN 'High value exposure; model should separate customers who need intervention from customers who would stay anyway.'
+                WHEN retention_budget_tier = 'Moderate save budget'
+                    THEN 'Moderate value exposure; model can improve campaign efficiency.'
+                WHEN retention_budget_tier = 'Automation only'
+                    THEN 'Low individual value; use scalable low-cost messaging.'
+                WHEN value_based_action_group = 'Suppress paid offer'
+                    THEN 'No observed value; paid offers should be avoided.'
+                ELSE 'Use as monitoring population.'
+            END AS modeling_reason
+        FROM segment_base
+        ORDER BY model_priority_score DESC;
+

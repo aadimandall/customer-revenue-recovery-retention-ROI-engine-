@@ -1,0 +1,29 @@
+{
+  "customers": 970960,
+  "paid_offer_customers": 71437,
+  "paid_offer_rate": 0.07357357666639203,
+  "paid_offer_expected_saved_clv_proxy": 16620208.953233957,
+  "paid_offer_intervention_cost_proxy": 791283.75,
+  "paid_offer_net_save_value_proxy": 15828925.203233957,
+  "paid_offer_roi_proxy": 20.004107506610566,
+  "top_action": "Immediate premium save offer",
+  "top_action_customers": 37303,
+  "top_action_net_save_value_proxy": 15527915.94670659,
+  "top_priority_tier": "Tier 2 - Premium save priority",
+  "top_priority_tier_customers": 2857,
+  "top_priority_tier_net_save_value_proxy": 4399203.631887075,
+  "top_segment": {
+    "lifecycle_stage": "Long-tenure",
+    "engagement_tier": "High engagement",
+    "revenue_tier": "High revenue",
+    "clv_value_tier": "Elite value",
+    "churn_risk_tier": "Critical risk",
+    "retention_budget_tier": "Premium save budget",
+    "recommended_retention_action": "Immediate premium save offer",
+    "customers": 2068,
+    "net_save_value_proxy": 3208954.617029759
+  },
+  "largest_suppression_reason": "Monitor only before ROI testing",
+  "largest_suppression_customers": 722108,
+  "validation_status": "PASS"
+}

@@ -1,0 +1,11 @@
+check_name,status,value,notes
+portfolio_summary_has_one_row,PASS,1.0,Portfolio summary should return one row.
+positive_profit_adjusted_clv,PASS,974361046.22,Total CLV proxy should be positive.
+positive_future_churned_clv,PASS,137698149.68,Future churned CLV proxy should be positive for leakage analysis.
+leakage_rate_reasonable,PASS,0.141321,Leakage rate should be between 0 and 100%.
+clv_concentration_has_10_deciles,PASS,10.0,CLV concentration table should have ten value deciles.
+threshold_table_has_four_rows,PASS,4.0,"Threshold table should contain top 1%, 5%, 10%, and 20%."
+scenario_table_has_three_rows,PASS,3.0,"Scenario table should contain conservative, base, and aggressive recovery assumptions."
+base_recovery_opportunity_positive,PASS,13769814.97,Base recovery opportunity should be positive.
+budget_opportunity_not_empty,PASS,5.0,Budget opportunity table should contain retention budget tiers.
+model_priority_segments_not_empty,PASS,68.0,Model-priority table should contain segment recommendations.

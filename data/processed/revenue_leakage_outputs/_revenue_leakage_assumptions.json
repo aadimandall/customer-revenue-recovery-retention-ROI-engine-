@@ -1,0 +1,22 @@
+{
+  "recovery_scenarios": {
+    "Conservative recovery": 0.05,
+    "Base recovery": 0.1,
+    "Aggressive recovery": 0.15
+  },
+  "campaign_cost_per_customer": {
+    "Premium save budget": 15.0,
+    "Moderate save budget": 6.0,
+    "Low-cost save budget": 2.0,
+    "Automation only": 0.5,
+    "No paid budget": 0.0
+  },
+  "expected_recovery_rate_by_budget": {
+    "Premium save budget": 0.12,
+    "Moderate save budget": 0.06,
+    "Low-cost save budget": 0.03,
+    "Automation only": 0.01,
+    "No paid budget": 0.0
+  },
+  "note": "These are planning assumptions for opportunity sizing. They are not final campaign results. The ROI simulator later will allow these assumptions to vary."
+}

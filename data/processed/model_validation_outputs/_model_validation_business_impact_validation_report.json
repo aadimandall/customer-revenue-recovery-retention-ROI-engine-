@@ -1,0 +1,62 @@
+[
+  {
+    "check_name": "best_model_exists",
+    "status": "PASS",
+    "value": "hist_gradient_boosting",
+    "notes": "Best model should be identified."
+  },
+  {
+    "check_name": "roc_auc_above_random",
+    "status": "PASS",
+    "value": 0.980842,
+    "notes": "ROC-AUC should beat random ranking."
+  },
+  {
+    "check_name": "pr_auc_above_base_rate",
+    "status": "PASS",
+    "value": 10.17441,
+    "notes": "PR-AUC should beat the base churn rate."
+  },
+  {
+    "check_name": "top_decile_lift_above_one",
+    "status": "PASS",
+    "value": 8.858098,
+    "notes": "Top decile should concentrate churn risk."
+  },
+  {
+    "check_name": "top_decile_captures_more_than_population_share",
+    "status": "PASS",
+    "value": 0.88581,
+    "notes": "Top decile should capture more than 10% of churners."
+  },
+  {
+    "check_name": "threshold_table_has_top20",
+    "status": "PASS",
+    "value": true,
+    "notes": "Threshold table should include top 20% planning point."
+  },
+  {
+    "check_name": "calibration_table_created",
+    "status": "PASS",
+    "value": 10,
+    "notes": "Calibration diagnostic should have multiple bins."
+  },
+  {
+    "check_name": "average_abs_calibration_gap_reasonable",
+    "status": "PASS",
+    "value": 0.000726,
+    "notes": "Average calibration gap should be reasonable for planning."
+  },
+  {
+    "check_name": "governance_checks_no_failures",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Governance checks should not contain failures."
+  },
+  {
+    "check_name": "feature_importance_governance_created",
+    "status": "PASS",
+    "value": 20,
+    "notes": "Feature-importance governance output should exist."
+  }
+]

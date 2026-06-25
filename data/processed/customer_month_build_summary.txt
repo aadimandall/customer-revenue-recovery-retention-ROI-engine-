@@ -1,0 +1,7 @@
+customer_month_rows: 1094039
+customer_month_unique_users: 962393
+modeling_snapshot_rows: 970960
+modeling_snapshot_churn_rate: 0.08994191315811156
+users_without_observed_month: 8567
+customer_month_min_month: 2015-01
+customer_month_max_month: 2017-03

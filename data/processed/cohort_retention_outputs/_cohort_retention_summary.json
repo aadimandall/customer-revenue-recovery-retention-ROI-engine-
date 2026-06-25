@@ -1,0 +1,17 @@
+{
+  "latest_observed_month": "2017-03",
+  "latest_observed_customers": 960235,
+  "latest_month_future_churn_label_rate": 0.07995230334241098,
+  "latest_month_future_churned_revenue_proxy": 21860917.0,
+  "highest_future_churned_revenue_engagement_tier": "High engagement",
+  "highest_future_churned_revenue_lifecycle_stage": "Long-tenure",
+  "top_recovery_segment": {
+    "lifecycle_stage": "Long-tenure",
+    "engagement_tier": "High engagement",
+    "revenue_tier": "High revenue",
+    "customers": 24676,
+    "churn_rate": 0.43390338790727834,
+    "future_churned_revenue_proxy": 10893857.0,
+    "recommended_focus": "High-priority retention candidate"
+  }
+}

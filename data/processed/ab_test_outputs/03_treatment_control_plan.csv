@@ -1,0 +1,3 @@
+experiment_group,customers,avg_randomization_score,avg_predicted_churn_probability,actual_future_churn_rate_retrospective,profit_adjusted_clv_proxy,future_churned_clv_proxy,gross_value_at_risk_proxy,expected_saved_clv_proxy,intervention_cost_proxy,net_save_value_proxy,planned_campaign_cost_proxy,group_role
+Treatment - retention offer,31430,0.24994264435268934,0.648223741899286,0.6536430162265352,77809907.74916667,62108337.21083333,61913594.106154755,8308586.691717555,375120.75,7933465.941717555,375120.75,Receives assigned retention intervention
+Control - holdout,31406,0.7495358468800705,0.6480803090904077,0.6517544418264026,77519809.20666666,61723370.45333333,61632271.74417265,8268000.897192394,374873.25,7893127.647192394,0.0,Holdout group for causal measurement

@@ -1,0 +1,40 @@
+{
+  "customers": 970960,
+  "future_churn_rate": 0.08994191315811156,
+  "avg_lifecycle_duration_months": 1.2163580374062783,
+  "median_lifecycle_duration_months": 1.0,
+  "future_churned_clv_proxy": 137698149.68001342,
+  "high_risk_high_value_customers": 179814,
+  "high_risk_high_value_future_churned_clv_proxy": 126851135.01667781,
+  "overall_survival_month_6": 0.4370982775566649,
+  "overall_survival_month_12": 0.35175032724769345,
+  "top_lifecycle_stage": {
+    "lifecycle_stage": "Long-tenure",
+    "customers": 493919,
+    "future_churn_rate": 0.09311850728560755,
+    "future_churned_clv_proxy": 95944662.10334253
+  },
+  "peak_hazard_month": {
+    "month_index": 3,
+    "monthly_hazard_rate": 0.28717158373697343,
+    "customers_at_risk": 13626,
+    "churn_events": 3913
+  },
+  "top_value_risk_quadrant": {
+    "value_risk_quadrant": "High risk / high value",
+    "strategy": "Immediate save-worthiness review",
+    "customers": 44304,
+    "future_churn_rate": 0.8116197183098591,
+    "future_churned_clv_proxy": 120377400.4116777
+  },
+  "top_model_priority_segment": {
+    "lifecycle_stage": "Long-tenure",
+    "engagement_tier": "High engagement",
+    "revenue_tier": "High revenue",
+    "clv_value_tier": "Elite value",
+    "churn_risk_tier": "Critical risk",
+    "customers": 14690,
+    "future_churned_clv_proxy": 66933351.19250099,
+    "recommendation": "Highest priority lifecycle segment"
+  }
+}

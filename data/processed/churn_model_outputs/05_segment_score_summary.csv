@@ -1,0 +1,145 @@
+lifecycle_stage,engagement_tier,revenue_tier,clv_value_tier,churn_risk_tier,retention_budget_tier,customers,avg_predicted_churn_probability,actual_future_churn_rate,profit_adjusted_clv_proxy,future_churned_clv_proxy,avg_profit_adjusted_clv_proxy
+Long-tenure,High engagement,High revenue,Elite value,Critical risk,Premium save budget,14690,0.8140968161436875,0.817426820966644,72578474.78916667,66933351.1925,4940.672211651918
+Established,High engagement,High revenue,Elite value,Critical risk,Premium save budget,7391,0.8154135054039683,0.8193749154376945,27177197.255,24622967.525,3677.0663313489376
+Long-tenure,High engagement,No observed revenue,Elite value,Critical risk,Premium save budget,2367,0.9189278175432746,0.9286016054076891,9732401.174166666,9551678.76,4111.70307315871
+Early lifecycle,High engagement,High revenue,Elite value,Critical risk,Premium save budget,2865,0.5220943321851027,0.5256544502617801,5516467.9375,3826643.275,1925.4687390924955
+Established,High engagement,No observed revenue,Elite value,Critical risk,Premium save budget,1039,0.8961426031944747,0.9056785370548605,2773199.1841666666,2680643.4741666666,2669.1041233557908
+Long-tenure,High engagement,Medium revenue,Core value,Critical risk,Low-cost save budget,3666,0.7166563654000322,0.7244953627932351,3612146.904166667,2584617.0458333334,985.3101211583925
+Long-tenure,High engagement,Medium revenue,High value,Critical risk,Moderate save budget,3267,0.7980298212809889,0.8062442607897153,3179716.2475,2497911.6175,973.2832101316193
+Long-tenure,No observed activity,High revenue,Elite value,Critical risk,Premium save budget,1477,0.9034883142907447,0.906567366283006,2096997.955,1893994.5483333333,1419.7684190927557
+Long-tenure,High engagement,High revenue,Elite value,High risk,Premium save budget,21809,0.06483540044308596,0.06272639735888853,30870258.683333334,1851637.125,1415.4825385544195
+New customer,High engagement,High revenue,Elite value,Critical risk,Premium save budget,419,0.9063085147500589,0.9093078758949881,1634239.035,1556902.945,3900.331825775656
+Long-tenure,High engagement,Medium revenue,High value,High risk,Moderate save budget,35210,0.03415158829969047,0.036523714853734734,40914655.3725,1352287.495,1162.0180452286284
+Long-tenure,High engagement,Medium revenue,Core value,High risk,Low-cost save budget,32245,0.0323518966742818,0.0327182508916111,36250819.85416667,1109278.2891666668,1124.230728924381
+Long-tenure,High engagement,Medium revenue,Elite value,Critical risk,Premium save budget,1362,0.7640606715594137,0.7812041116005873,1403639.1525,1023437.7075,1030.5720649779737
+Established,High engagement,High revenue,Elite value,High risk,Premium save budget,16438,0.05210673046280277,0.047998539968365984,20881249.61,911713.6925,1270.303541185059
+Established,No observed activity,High revenue,Elite value,Critical risk,Premium save budget,1095,0.9153417885703481,0.9205479452054794,941179.8066666668,814373.8416666667,859.5249375951295
+Unknown tenure,No observed activity,High revenue,Elite value,Critical risk,Premium save budget,1555,0.9831212427594747,0.9877813504823151,825523.0750000001,813564.5050000001,530.8830064308682
+Long-tenure,High engagement,Low revenue,Low value,Critical risk,Automation only,1621,0.5872137683939306,0.5774213448488588,1251578.5425000002,689342.9400000001,772.1027405922272
+Established,High engagement,Medium revenue,High value,High risk,Moderate save budget,14501,0.04749404134027397,0.05096200262050893,14511209.83,656768.905,1000.7040776498172
+Long-tenure,High engagement,Medium revenue,High value,Medium risk,Moderate save budget,79557,0.007810943518050055,0.006511054966879093,98928817.45500001,639708.7775000001,1243.4960777178628
+Long-tenure,No observed activity,Medium revenue,High value,Critical risk,Moderate save budget,985,0.9032429628873812,0.9258883248730965,670274.6375000001,607888.7100000001,680.4818654822336
+Long-tenure,High engagement,Medium revenue,Elite value,High risk,Premium save budget,14564,0.03663378231626997,0.035361164515243064,17306097.95416667,542220.3691666668,1188.279178396503
+Early lifecycle,High engagement,No observed revenue,Elite value,Critical risk,Premium save budget,347,0.9030267897008103,0.9106628242074928,535920.1141666666,511252.64666666667,1544.438369356388
+Long-tenure,No observed activity,Medium revenue,Core value,Critical risk,Low-cost save budget,848,0.863301350310355,0.8903301886792453,566518.6041666667,490417.1783333334,668.0643917059749
+Long-tenure,No observed activity,Medium revenue,Elite value,Critical risk,Premium save budget,615,0.7703804276089963,0.7983739837398374,647968.7716666667,477895.6,1053.6077588075882
+Long-tenure,High engagement,Medium revenue,Core value,Medium risk,Low-cost save budget,55977,0.007734834362639201,0.00685996034085428,68351989.81,473785.87750000006,1221.07275863301
+Established,High engagement,Medium revenue,Core value,High risk,Low-cost save budget,9474,0.04752060045578618,0.04823728097952291,9457293.787500001,408689.775,998.2366252374923
+Established,High engagement,Low revenue,Low value,Critical risk,Automation only,904,0.868762267318502,0.9015486725663717,464757.4750000001,400694.5800000001,514.1122511061948
+Long-tenure,Medium engagement,High revenue,Elite value,Critical risk,Premium save budget,358,0.7337935099859426,0.723463687150838,520304.62250000006,370587.3275,1453.364867318436
+Long-tenure,High engagement,Low revenue,Core value,Critical risk,Low-cost save budget,856,0.5517935338547317,0.552570093457944,694387.7200000001,362423.6633333334,811.2006074766356
+Established,High engagement,Medium revenue,High value,Critical risk,Moderate save budget,648,0.7741131897323735,0.7854938271604939,479615.72750000004,358979.36750000005,740.1477276234568
+Long-tenure,High engagement,High revenue,Elite value,Medium risk,Premium save budget,27838,0.008428672970418659,0.007866944464401178,42294469.88,340017.21,1519.3070579783032
+Early lifecycle,High engagement,High revenue,Elite value,High risk,Premium save budget,7122,0.04302208268058104,0.041982589160348215,8531866.8825,336426.35,1197.959405012637
+Established,High engagement,Medium revenue,Core value,Critical risk,Low-cost save budget,629,0.660299494966274,0.6597774244833068,471710.75250000006,300928.4525,749.9376033386328
+Established,High engagement,Medium revenue,Elite value,High risk,Premium save budget,5796,0.05010137488660245,0.051932367149758456,5735169.115,264809.5125,989.504678226363
+Long-tenure,High engagement,Medium revenue,Elite value,Medium risk,Premium save budget,30147,0.0077742347940033575,0.005804889375393903,38094870.49333334,218004.5075,1263.6371941928994
+Unknown tenure,No observed activity,Low revenue,Low value,Critical risk,Automation only,861,0.9543380483276944,0.9732868757259001,229320.84500000003,217190.87000000002,266.3424448315912
+Long-tenure,High engagement,No observed revenue,High value,Critical risk,Moderate save budget,313,0.7834597544236215,0.7603833865814696,277247.6525,207225.1025,885.7752476038339
+Established,No observed activity,Low revenue,Low value,Critical risk,Automation only,677,0.9680351214969894,0.9719350073855244,218101.45500000002,206798.37750000003,322.15872230428363
+Long-tenure,High engagement,No observed revenue,Core value,Critical risk,Low-cost save budget,306,0.7865410785658609,0.8104575163398693,252022.51750000002,199552.94666666668,823.6029983660131
+Established,Medium engagement,High revenue,Elite value,Critical risk,Premium save budget,288,0.8111072810315657,0.7916666666666666,260671.06000000003,191022.06500000003,905.1078472222223
+Established,High engagement,Low revenue,Core value,Critical risk,Low-cost save budget,390,0.8525462331223573,0.8974358974358975,207342.28666666668,179224.5541666667,531.646888888889
+Long-tenure,No observed activity,Medium revenue,High value,High risk,Moderate save budget,5747,0.0268815516567343,0.029580650774317034,5315500.8725000005,157235.97500000003,924.9175000000001
+Long-tenure,No observed activity,Medium revenue,Core value,High risk,Low-cost save budget,4889,0.034821066698518144,0.03599918183677644,4359341.025,153101.78000000003,891.6631264062181
+Established,High engagement,Medium revenue,Elite value,Critical risk,Premium save budget,251,0.7144046418159015,0.7131474103585658,216263.6666666667,144538.1275,861.6082337317398
+Unknown tenure,No observed activity,Medium revenue,High value,Critical risk,Moderate save budget,415,0.9792792691027631,0.9927710843373494,131837.0625,130030.81000000001,317.6796686746988
+Unknown tenure,No observed activity,Medium revenue,Core value,Critical risk,Low-cost save budget,447,0.9635859016422456,0.9731543624161074,135301.725,127606.765,302.68842281879193
+Early lifecycle,High engagement,Medium revenue,High value,Critical risk,Moderate save budget,500,0.3352623294381573,0.404,332476.36500000005,124675.005,664.9527300000001
+Early lifecycle,High engagement,Medium revenue,High value,High risk,Moderate save budget,3282,0.05573947035619435,0.04570383912248629,2958554.43,119561.32500000001,901.4486380255942
+Long-tenure,High engagement,Low revenue,Low value,Medium risk,Automation only,15975,0.007713793867675186,0.008200312989045383,12776554.1475,103934.90250000001,799.7842971830986
+Long-tenure,No observed activity,Low revenue,Low value,Critical risk,Automation only,301,0.8530827992334391,0.8604651162790697,131422.42750000002,103771.23250000001,436.61936046511636
+Early lifecycle,High engagement,Medium revenue,Core value,High risk,Low-cost save budget,2092,0.054775772994339694,0.058317399617590825,1887579.0375,93198.95000000001,902.2844347514341
+Early lifecycle,High engagement,Medium revenue,Core value,Critical risk,Low-cost save budget,369,0.3863209802231302,0.42276422764227645,235914.18500000003,90869.48000000001,639.333834688347
+Unknown tenure,No observed activity,Low revenue,Core value,Critical risk,Low-cost save budget,390,0.9488861196573601,0.9666666666666667,90470.51000000001,84160.1475,231.97566666666668
+Established,No observed activity,Low revenue,Core value,Critical risk,Low-cost save budget,257,0.9632698442813322,0.9727626459143969,74005.71750000001,70154.37000000001,287.9599902723736
+Long-tenure,No observed activity,Medium revenue,Elite value,High risk,Premium save budget,2292,0.02917314174715481,0.028795811518324606,2285490.404166667,65968.64083333334,997.1598622018616
+Established,High engagement,High revenue,Elite value,Medium risk,Premium save budget,6305,0.008767679939030415,0.006978588421887391,8588481.59,62124.042499999996,1362.1699587628866
+Early lifecycle,High engagement,Medium revenue,Elite value,High risk,Premium save budget,1268,0.05833208409336388,0.06072555205047318,1134667.9825000002,58478.94,894.8485666403786
+Established,High engagement,Medium revenue,High value,Medium risk,Moderate save budget,7461,0.008175898577552314,0.006433453960595094,8579457.25,56153.630000000005,1149.9071505160166
+Long-tenure,High engagement,Low revenue,Low value,High risk,Automation only,2768,0.017567774375489762,0.022398843930635837,2341441.3750000005,49465.162500000006,845.8964505057805
+Unknown tenure,No observed activity,Medium revenue,Core value,High risk,Low-cost save budget,3329,0.01266168734090727,0.021628116551516974,2159010.4575,46856.81,648.546247371583
+Long-tenure,High engagement,Low revenue,Core value,Medium risk,Low-cost save budget,6639,0.00769904090556916,0.007531254707034192,5304561.979166667,40920.16500000001,799.0001474870714
+Unknown tenure,No observed activity,Medium revenue,High value,Medium risk,Moderate save budget,9963,0.0074955080393758365,0.005420054200542005,7285119.952500001,39485.745,731.2175000000001
+Long-tenure,No observed activity,Medium revenue,High value,Medium risk,Moderate save budget,6740,0.007000246458129619,0.0057863501483679525,6233943.950000001,36071.78250000001,924.9175000000001
+Established,High engagement,Medium revenue,Core value,Medium risk,Low-cost save budget,5888,0.007571457356670125,0.004245923913043478,6623572.0525,28745.08,1124.927318699049
+Established,No observed activity,Medium revenue,High value,High risk,Moderate save budget,1257,0.026906330225895735,0.024661893396976928,1040880.8475000001,25670.092500000002,828.0675000000001
+Long-tenure,High engagement,Low revenue,Core value,High risk,Low-cost save budget,1385,0.01985533500710386,0.020216606498194945,1216958.4483333335,23608.50916666667,878.670359807461
+Established,High engagement,Medium revenue,Elite value,Medium risk,Premium save budget,2785,0.008220237444296043,0.006463195691202872,3187159.1700000004,20871.175000000003,1144.4018563734292
+Established,No observed activity,Medium revenue,Core value,High risk,Low-cost save budget,894,0.030451255693518843,0.02796420581655481,730177.6950000001,19812.487500000003,816.7535738255034
+Unknown tenure,No observed activity,Medium revenue,Core value,Medium risk,Low-cost save budget,6282,0.00749953850311844,0.004297994269340974,4592080.2525,19742.8725,730.9901707258836
+Long-tenure,No observed activity,Medium revenue,Core value,Medium risk,Low-cost save budget,4587,0.006966986796608425,0.004578155657292348,4203036.175000001,19423.2675,916.293040113364
+Unknown tenure,No observed activity,Medium revenue,Elite value,Medium risk,Premium save budget,3721,0.0074955080393758365,0.0064498790647675355,2893393.75,18721.105,777.5849905939264
+Long-tenure,Medium engagement,Medium revenue,High value,High risk,Moderate save budget,902,0.02319529967852768,0.019955654101995565,925333.9550000001,18566.145,1025.8691297117518
+Long-tenure,Medium engagement,Medium revenue,High value,Medium risk,Moderate save budget,2432,0.007591488915232976,0.007401315789473684,2508492.4800000004,18566.145,1031.4525
+Long-tenure,Medium engagement,Medium revenue,Core value,High risk,Low-cost save budget,956,0.026823119262392503,0.0198744769874477,927325.3275000001,17825.697500000002,970.0055726987449
+Long-tenure,High engagement,Low revenue,Low value,Low risk,Automation only,31032,0.0007431169961015164,0.000580046403712297,25054328.227500003,15238.080000000002,807.3707214327147
+Unknown tenure,No observed activity,Medium revenue,High value,High risk,Moderate save budget,752,0.017081652052534847,0.026595744680851064,549875.56,14624.350000000002,731.2175000000001
+Established,No observed activity,Medium revenue,Elite value,High risk,Premium save budget,429,0.027414362146162066,0.03496503496503497,374949.9325,13006.955000000002,874.0091666666666
+Established,No observed activity,High revenue,Elite value,High risk,Premium save budget,600,0.02466623508856027,0.016666666666666666,609490.245,10109.970000000001,1015.817075
+Unknown tenure,No observed activity,High revenue,Elite value,High risk,Premium save budget,364,0.03646684132481184,0.04395604395604396,197208.375,9919.78,541.78125
+Long-tenure,Medium engagement,Medium revenue,Core value,Medium risk,Low-cost save budget,1731,0.007349931997349083,0.005199306759098787,1734280.08,9283.0725,1001.8949046793762
+Long-tenure,No observed activity,Medium revenue,Elite value,Medium risk,Premium save budget,2544,0.0069823839611147225,0.003537735849056604,2470178.62,8697.130000000001,970.9821619496856
+Long-tenure,Medium engagement,High revenue,Elite value,High risk,Premium save budget,278,0.03516279854395006,0.03237410071942446,335523.86833333335,8235.890000000001,1206.9203896882495
+Long-tenure,No observed activity,Low revenue,Low value,Medium risk,Automation only,2268,0.006004564125694505,0.0048500881834215165,1491642.6525,7255.462500000001,657.6907638888889
+Long-tenure,Medium engagement,Medium revenue,Elite value,High risk,Premium save budget,352,0.024744780332167735,0.017045454545454544,373426.30000000005,6188.715,1060.8701704545456
+Long-tenure,High engagement,Medium revenue,High value,Low risk,Moderate save budget,6668,0.0025105475924910342,0.0005998800239952009,8100001.325000001,4658.485000000001,1214.75724730054
+Long-tenure,High engagement,Low revenue,Elite value,High risk,Premium save budget,376,0.02896515405909697,0.007978723404255319,718137.4525,4320.160000000001,1909.940033244681
+Established,No observed activity,Medium revenue,High value,Medium risk,Moderate save budget,1070,0.007030044595890139,0.004672897196261682,886032.2250000001,4140.337500000001,828.0675000000001
+Long-tenure,Medium engagement,Medium revenue,Elite value,Medium risk,Premium save budget,930,0.0074593543893597646,0.004301075268817204,973229.6600000001,4125.81,1046.4835053763443
+Established,Medium engagement,High revenue,Elite value,High risk,Premium save budget,268,0.028449369314718774,0.014925373134328358,280769.8725,4059.51,1047.6487779850747
+Long-tenure,No observed activity,Low revenue,Core value,Medium risk,Low-cost save budget,996,0.006012606900196627,0.006024096385542169,614703.3750000001,3758.040000000001,617.1720632530122
+Long-tenure,No observed activity,High revenue,Elite value,Medium risk,Premium save budget,608,0.008298910629746928,0.004934210526315789,718473.6,3545.1000000000004,1181.7
+Established,No observed activity,Medium revenue,Core value,Medium risk,Low-cost save budget,898,0.006916302652975902,0.004454342984409799,723025.1925000001,3312.2700000000004,805.1505484409801
+Long-tenure,No observed activity,High revenue,Elite value,High risk,Premium save budget,468,0.03125473334856112,0.00641025641025641,572736.71,3288.48,1223.7963888888887
+Unknown tenure,No observed activity,Medium revenue,Elite value,High risk,Premium save budget,289,0.017081652052534847,0.01384083044982699,224265.86000000002,3137.94,776.0064359861592
+Long-tenure,High engagement,Medium revenue,Core value,Low risk,Low-cost save budget,11300,0.0019665515362442734,0.00026548672566371683,11888899.360000001,3015.5775,1052.1149876106197
+Established,High engagement,Medium revenue,Core value,Low risk,Low-cost save budget,12279,0.0016649047109515717,0.0002443195699975568,12315286.295,2978.3975,1002.9551506637348
+Unknown tenure,No observed activity,Medium revenue,Core value,Low risk,Low-cost save budget,4269,0.0005852873217718836,0.0011712344811431249,2099919.25,2453.75,491.899566643242
+Long-tenure,High engagement,Low revenue,Core value,Low risk,Low-cost save budget,13106,0.0007457410560187067,0.0002289027926140699,10579484.2725,2374.5150000000003,807.2244981306272
+Early lifecycle,High engagement,Medium revenue,Core value,Medium risk,Low-cost save budget,1490,0.005527604179291464,0.0020134228187919465,1417148.33,2207.3025000000002,951.1062617449664
+Established,High engagement,Medium revenue,High value,Low risk,Moderate save budget,8105,0.0023790846126043944,0.00024676125848241827,9209519.7675,2188.8100000000004,1136.276343923504
+Long-tenure,Medium engagement,Low revenue,Low value,Medium risk,Automation only,908,0.0071278292641045885,0.003303964757709251,622277.3700000001,2055.9825,685.3275000000001
+Early lifecycle,High engagement,Medium revenue,High value,Medium risk,Moderate save budget,894,0.006402799864118186,0.0022371364653243847,936239.265,1995.1100000000004,1047.2475
+Established,Medium engagement,Medium revenue,High value,Medium risk,Moderate save budget,337,0.00611939742631165,0.005934718100890208,314961.04250000004,1869.2050000000002,934.6025000000001
+Established,No observed activity,Medium revenue,Elite value,Medium risk,Premium save budget,394,0.00705700436996459,0.005076142131979695,344689.15,1762.67,874.8455583756346
+Unknown tenure,No observed activity,Low revenue,Low value,Low risk,Automation only,53122,0.0003130844672011705,5.6473777342720533e-05,28101899.1825,1563.705,529.0067991133617
+Long-tenure,No observed activity,Low revenue,Core value,Low risk,Low-cost save budget,2680,0.0005519826209986776,0.0007462686567164179,1653202.9800000004,1299.8700000000003,616.8667835820897
+Long-tenure,No observed activity,Low revenue,Low value,Low risk,Automation only,6315,0.0005466617419729858,0.00031670625494853525,4152296.3625000003,1299.8700000000001,657.5291152019003
+Long-tenure,Medium engagement,High revenue,Elite value,Medium risk,Premium save budget,458,0.008893126881630648,0.002183406113537118,570122.8975,1246.05,1244.8098198689956
+Established,No observed activity,Low revenue,Low value,Low risk,Automation only,27910,0.00025745191530302745,7.165890361877464e-05,16564101.840000002,1171.17,593.4826886420639
+Early lifecycle,High engagement,Low revenue,Low value,Low risk,Automation only,16384,0.00024860689125552816,6.103515625e-05,11012044.972500002,804.3750000000001,672.1218855285646
+Long-tenure,Medium engagement,Low revenue,Core value,Medium risk,Low-cost save budget,383,0.007149177157030154,0.0026109660574412533,262480.43250000005,685.3275000000001,685.3275000000001
+Long-tenure,Medium engagement,Low revenue,Low value,Low risk,Automation only,1742,0.0006660358496634576,0.000574052812858783,1193840.5050000001,685.3275000000001,685.3275000000001
+Established,Medium engagement,Low revenue,Low value,Low risk,Automation only,5900,0.00030577541497789926,0.00016949152542372882,3663767.2500000005,620.9775000000001,620.9775000000001
+Unknown tenure,No observed activity,Low revenue,Core value,Low risk,Low-cost save budget,22084,0.00031306366742664784,4.528165187466039e-05,10790362.440000001,485.84250000000003,488.6054356094911
+Unknown tenure,No observed activity,No observed revenue,No observed value,Critical risk,No paid budget,8670,0.9788262475955899,0.9806228373702423,0.0,0.0,0.0
+Early lifecycle,Medium engagement,No observed revenue,No observed value,Critical risk,No paid budget,325,0.9143687181535742,0.9292307692307692,0.0,0.0,0.0
+Established,Medium engagement,No observed revenue,No observed value,Critical risk,No paid budget,771,0.9090665244488368,0.9092088197146563,0.0,0.0,0.0
+Long-tenure,Medium engagement,No observed revenue,No observed value,Critical risk,No paid budget,1317,0.9067845387851571,0.914958238420653,0.0,0.0,0.0
+Early lifecycle,High engagement,No observed revenue,No observed value,Critical risk,No paid budget,3206,0.7391907340677383,0.7442295695570805,0.0,0.0,0.0
+Long-tenure,High engagement,No observed revenue,No observed value,Critical risk,No paid budget,15239,0.7130171920538667,0.7159262418793884,0.0,0.0,0.0
+Established,High engagement,No observed revenue,No observed value,Critical risk,No paid budget,9003,0.7018864511209513,0.7053204487393091,0.0,0.0,0.0
+Early lifecycle,No observed activity,Medium revenue,Core value,Medium risk,Low-cost save budget,375,0.0076307630646893125,0.0,246430.11250000002,0.0,657.1469666666667
+Long-tenure,High engagement,Low revenue,Elite value,Medium risk,Premium save budget,593,0.006749024721071916,0.0,1091591.0091666668,0.0,1840.794281899944
+Early lifecycle,High engagement,Medium revenue,Elite value,Medium risk,Premium save budget,306,0.006321683163541559,0.0,319420.98500000004,0.0,1043.8594281045753
+Established,Medium engagement,Medium revenue,Core value,Medium risk,Low-cost save budget,292,0.006023650172162161,0.0,265320.47750000004,0.0,908.6317722602741
+Long-tenure,High engagement,Medium revenue,Elite value,Low risk,Premium save budget,2525,0.0025096268711582844,0.0,3078924.4525,0.0,1219.3760207920793
+Early lifecycle,High engagement,Medium revenue,High value,Low risk,Moderate save budget,1456,0.0024161172124739718,0.0,1517586.2325000002,0.0,1042.298236607143
+Early lifecycle,High engagement,Medium revenue,Elite value,Low risk,Premium save budget,527,0.0024118956551511406,0.0,551706.025,0.0,1046.8805028462998
+Established,High engagement,Medium revenue,Elite value,Low risk,Premium save budget,3057,0.0023814698321908217,0.0,3470721.4425000004,0.0,1135.3357679097155
+Long-tenure,No observed activity,Medium revenue,Core value,Low risk,Low-cost save budget,293,0.0008020679851210868,0.0,181997.6925,0.0,621.1525341296929
+Early lifecycle,High engagement,Medium revenue,Core value,Low risk,Low-cost save budget,14412,0.0007438792255315467,0.0,10603476.325000001,0.0,735.7394063974466
+Long-tenure,Medium engagement,Low revenue,Core value,Low risk,Low-cost save budget,710,0.0006518163028606609,0.0,486582.5250000001,0.0,685.3275000000001
+Early lifecycle,Medium engagement,Medium revenue,Core value,Low risk,Low-cost save budget,1080,0.0004926455373517964,0.0,615568.1675,0.0,569.970525462963
+Early lifecycle,Medium engagement,Low revenue,Low value,Low risk,Automation only,1277,0.00033798076027940425,0.0,710813.3175000001,0.0,556.6275
+Early lifecycle,No observed activity,Medium revenue,Core value,Low risk,Low-cost save budget,1331,0.0003115824241444091,0.0,653188.25,0.0,490.75
+Early lifecycle,Medium engagement,Low revenue,Core value,Low risk,Low-cost save budget,518,0.00030683949968026206,0.0,288333.04500000004,0.0,556.6275
+Established,Medium engagement,Low revenue,Core value,Low risk,Low-cost save budget,2455,0.00029966003706974483,0.0,1524499.7625000002,0.0,620.9775000000001
+Established,Low engagement,Low revenue,Low value,Low risk,Automation only,521,0.000294234721354645,0.0,323529.2775,0.0,620.9775000000001
+Established,No observed activity,Low revenue,Core value,Low risk,Low-cost save budget,11734,0.0002571307548995938,0.0,6483989.655000001,0.0,552.5813580194308
+Established,High engagement,Low revenue,Low value,Low risk,Automation only,78055,0.00025534706635982725,0.0,57293111.947500005,0.0,734.0095054448786
+Established,High engagement,Low revenue,Core value,Low risk,Low-cost save budget,32912,0.0002550896392878446,0.0,24155168.895000003,0.0,733.9319669117648
+Early lifecycle,High engagement,Low revenue,Core value,Low risk,Low-cost save budget,6895,0.0002479619527258188,0.0,4626385.335000001,0.0,670.9768433647572
+Early lifecycle,No observed activity,Low revenue,Low value,Low risk,Automation only,2847,0.0002097887138275525,0.0,1505049.975,0.0,528.6441780821918
+Early lifecycle,No observed activity,Low revenue,Core value,Low risk,Low-cost save budget,1207,0.00020581392446947453,0.0,589101.7275,0.0,488.0710252692627

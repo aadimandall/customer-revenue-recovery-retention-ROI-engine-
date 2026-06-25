@@ -1,0 +1,18 @@
+{
+  "best_model": "hist_gradient_boosting",
+  "best_model_note": "Main nonlinear churn-risk model.",
+  "uses_direct_cancel_signals": true,
+  "roc_auc": 0.980842275995798,
+  "pr_auc": 0.9150849229312272,
+  "brier_score": 0.0197726269569158,
+  "log_loss": 0.07638173857234352,
+  "test_churn_rate": 0.08993985334102332,
+  "top_decile_observed_churn_rate": 0.7966960533904589,
+  "top_decile_lift": 8.858098204470501,
+  "top_decile_churn_capture_share": 0.8858098204470503,
+  "top_decile_future_churned_clv_share": 0.9220492890143536,
+  "top_20pct_churn_capture_rate": 0.9577684133382192,
+  "top_20pct_future_churned_clv_capture_rate": 0.9694256026157746,
+  "recommended_operating_point": "Top 20% risk segment for planning. Final targeting will use save-worthiness scoring.",
+  "validation_status": "PASS"
+}

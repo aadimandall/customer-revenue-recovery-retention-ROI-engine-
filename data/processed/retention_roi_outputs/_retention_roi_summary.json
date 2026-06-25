@@ -1,0 +1,20 @@
+{
+  "best_base_strategy": "All positive ROI paid-offer candidates",
+  "best_base_targeted_customers": 71437,
+  "best_base_expected_customers_saved": 4704.974760676553,
+  "best_base_expected_saved_clv_proxy": 16620208.953233957,
+  "best_base_campaign_cost_proxy": 791283.75,
+  "best_base_net_save_value_proxy": 15828925.203233957,
+  "best_base_roi_proxy": 20.004107506610566,
+  "best_base_budget_status": "Within budget and positive ROI",
+  "best_budget_cap": 1000000.0,
+  "best_budget_targeted_customers": 71437,
+  "best_budget_net_save_value_proxy": 15828925.203233957,
+  "best_budget_roi_proxy": 20.004107506610566,
+  "efficient_budget_cap": 750000.0,
+  "efficient_budget_targeted_customers": 62836,
+  "efficient_budget_net_save_value_proxy": 15826593.58890995,
+  "efficient_budget_value_capture_vs_max": 0.9998526991381872,
+  "break_even_response_rate": 0.007325873416125833,
+  "validation_status": "PASS"
+}

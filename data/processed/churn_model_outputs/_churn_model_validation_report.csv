@@ -1,0 +1,8 @@
+check_name,status,value,notes
+predicted_probabilities_in_range,PASS,"min=0.000120, max=0.999791",Model probabilities should be between 0 and 1.
+roc_auc_above_random,PASS,0.980842,ROC-AUC should be above random ranking.
+pr_auc_above_base_churn_rate,PASS,0.915085,PR-AUC should be above the base churn rate.
+top_decile_lift_above_one,PASS,8.858098,Highest-risk decile should have above-average churn concentration.
+top_decile_captures_churners,PASS,0.88581,Top risk decile should capture more than its population share of churners.
+scored_customer_output_not_empty,PASS,970960,Scored customer output should not be empty.
+ten_risk_deciles_created,PASS,10,Scored customer file should contain ten risk deciles.

@@ -1,0 +1,58 @@
+{
+  "roi_scenarios": [
+    {
+      "scenario_name": "Conservative",
+      "response_multiplier": 0.7,
+      "cost_multiplier": 1.25,
+      "budget_cap": 500000,
+      "scenario_readout": "Lower response and higher cost; use for downside planning."
+    },
+    {
+      "scenario_name": "Base",
+      "response_multiplier": 1.0,
+      "cost_multiplier": 1.0,
+      "budget_cap": 1000000,
+      "scenario_readout": "Base planning case from save-worthiness assumptions."
+    },
+    {
+      "scenario_name": "Upside",
+      "response_multiplier": 1.25,
+      "cost_multiplier": 0.9,
+      "budget_cap": 1500000,
+      "scenario_readout": "Higher response and lower cost; use for upside planning."
+    },
+    {
+      "scenario_name": "Budget constrained",
+      "response_multiplier": 0.9,
+      "cost_multiplier": 1.1,
+      "budget_cap": 250000,
+      "scenario_readout": "Smaller leadership-approved campaign budget."
+    },
+    {
+      "scenario_name": "Aggressive growth",
+      "response_multiplier": 1.4,
+      "cost_multiplier": 1.15,
+      "budget_cap": 2000000,
+      "scenario_readout": "Larger campaign push with higher execution cost."
+    }
+  ],
+  "budget_caps": [
+    100000,
+    250000,
+    500000,
+    750000,
+    1000000,
+    1500000,
+    2000000
+  ],
+  "response_multipliers": [
+    0.5,
+    0.7,
+    0.85,
+    1.0,
+    1.15,
+    1.3,
+    1.5
+  ],
+  "note": "Planning assumptions for ROI simulation. Final response rates require A/B testing."
+}

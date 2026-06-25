@@ -1,0 +1,50 @@
+{
+  "best_model": "hist_gradient_boosting",
+  "business_validation_grade": "Excellent business ranking model",
+  "roc_auc": 0.980842275995798,
+  "pr_auc": 0.9150849229312272,
+  "pr_auc_multiple_vs_base_churn": 10.174409774291231,
+  "brier_score": 0.0197726269569158,
+  "top_decile_lift": 8.858098204470501,
+  "top_decile_churn_capture_share": 0.8858098204470503,
+  "top_decile_future_churned_clv_share": 0.9220492890143536,
+  "recommended_operating_point": {
+    "target_population_pct": 0.05,
+    "targeted_customers": 12137,
+    "score_threshold": 0.8830398547150561,
+    "churn_capture_rate": 0.5438347379992672,
+    "future_churned_clv_capture_rate": 0.8333995194020791
+  },
+  "calibration": {
+    "avg_abs_calibration_gap": 0.0007255968622206068,
+    "max_abs_calibration_gap": 0.002502988568484,
+    "readout": "Calibration is strong enough for planning."
+  },
+  "top_risk_value_group": {
+    "churn_risk_tier": "Critical risk",
+    "clv_value_tier": "Elite value",
+    "retention_budget_tier": "Premium save budget",
+    "customers": 37303,
+    "future_churned_clv_proxy": 116026254.35916667
+  },
+  "top_segment_priority": {
+    "lifecycle_stage": "Long-tenure",
+    "engagement_tier": "High engagement",
+    "revenue_tier": "High revenue",
+    "clv_value_tier": "Elite value",
+    "churn_risk_tier": "Critical risk",
+    "retention_budget_tier": "Premium save budget",
+    "customers": 11297,
+    "future_churned_clv_proxy": 60855030.405,
+    "validation_recommendation": "Highest priority for save-worthiness layer"
+  },
+  "sensitivity_readout": "The model still ranks churn risk without direct cancellation signals. Cancellation behavior helps, but broader engagement and transaction patterns also matter.",
+  "feature_importance_governance": {
+    "top_feature": "trailing_3mo_revenue",
+    "top_feature_family": "Revenue and payment behavior",
+    "importance_mean": 0.0493138973861322,
+    "direct_cancel_importance_share": 0.3019799798325325,
+    "governance_readout": "Feature importance is not dominated by cancellation signals. The model appears to learn broader customer behavior patterns."
+  },
+  "governance_status": "PASS"
+}

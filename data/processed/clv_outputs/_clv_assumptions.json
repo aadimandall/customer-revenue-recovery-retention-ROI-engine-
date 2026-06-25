@@ -1,0 +1,12 @@
+{
+  "gross_margin_rate": 0.65,
+  "max_clv_months": 24,
+  "base_expected_months": 3,
+  "auto_renew_month_bonus": 4,
+  "long_tenure_month_bonus": 2,
+  "established_tenure_month_bonus": 1,
+  "cancellation_month_penalty": -5,
+  "major_activity_drop_month_penalty": -2,
+  "engagement_decile_weight": 0.55,
+  "notes": "This is a pre-model CLV proxy. It does not use the individual churn label to calculate customer value. The churn label is used only for retrospective segment summaries showing where future churned value was concentrated."
+}
