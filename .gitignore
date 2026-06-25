@@ -18,3 +18,12 @@ data/interim/
 
 data/processed/tableau_customer_retention_base.csv
 data/processed/ab_test_outputs/ab_test_candidate_population.csv
+
+# Local large/sample Tableau files not needed for Part 1 publish
+data/processed/ab_test_outputs/tableau_ab_test_customer_sample.csv
+data/processed/churn_model_outputs/tableau_churn_scored_customer_sample.csv
+data/processed/clv_outputs/04_high_value_recovery_targets.csv
+data/processed/clv_outputs/tableau_customer_clv_sample.csv
+data/processed/save_worthiness_outputs/high_priority_save_targets.csv
+data/processed/save_worthiness_outputs/tableau_save_worthiness_customer_sample.csv
+data/processed/survival_lifecycle_outputs/tableau_lifecycle_customer_sample.csv
