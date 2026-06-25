@@ -27,3 +27,5 @@ data/processed/clv_outputs/tableau_customer_clv_sample.csv
 data/processed/save_worthiness_outputs/high_priority_save_targets.csv
 data/processed/save_worthiness_outputs/tableau_save_worthiness_customer_sample.csv
 data/processed/survival_lifecycle_outputs/tableau_lifecycle_customer_sample.csv
+
+README.md.save
