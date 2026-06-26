@@ -30,6 +30,24 @@ So I framed the project around a more disciplined question:
 
 Where does the next dollar of retention spend have the best chance of protecting value?
 
+## How the engine works
+
+This project is structured as a retention decision engine, not a standalone churn model.
+
+The goal is to connect customer risk, customer value, campaign economics, and test design so the final output is not just a prediction, but a strategy that can be tested before rollout.
+
+The first step was building a customer table that could be trusted. Before any modeling, I created a one-row-per-customer foundation and checked for duplicate records, missing CLV values, negative value metrics, and incomplete strategy assignments. Every customer needed a value tier, action group, and budget tier so the analysis could support business decisions instead of only producing model scores.
+
+After the data foundation was stable, I moved to the main business problem: where is value leaking? Churn risk matters, but it is not enough on its own. A high-risk customer only becomes a business priority when that risk is connected to revenue, margin, and long-term value. To measure that exposure, I combined annual revenue run-rate, margin run-rate, profit-adjusted CLV, future churned CLV, and leakage concentration across value deciles and behavioral segments.
+
+The churn model came next. Its purpose was not only to predict which customers might leave, but to rank customers in a way that could support retention strategy. I also trained a sensitivity model without direct cancellation signals to test whether the ranking still held when obvious churn indicators were removed. This helped separate model performance from business usefulness.
+
+I then added lifecycle context because two customers with the same churn probability may not deserve the same action. A long-tenure, high-engagement, high-value customer should be treated differently from a lower-value customer with similar risk. The lifecycle layer is therefore used as a risk-context proxy based on observed customer-month coverage, not as an exact event-time survival estimate.
+
+Once the risk and value layers were built, I converted the model outputs into save-worthiness logic. This step moved the project from prediction to economics. The engine compared churn probability, CLV exposure, expected response assumptions, intervention cost, and expected net save value to separate customers who were simply at risk from customers who were economically worth a paid retention offer.
+
+The final layer made the strategy testable. I used ROI simulation to compare budget levels, identify the efficient frontier, and estimate break-even response rates. Then I designed an A/B test plan so the campaign would not be scaled from model scores alone. The final recommendation only scales if churn improves, incremental net value is positive, and customer-experience guardrails hold.
+
 ## The business problem
 
 Before building the model, I wanted to take a closer look at what kind of churn problem this actually was.
