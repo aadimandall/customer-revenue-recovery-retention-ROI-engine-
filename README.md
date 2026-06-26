@@ -18,17 +18,17 @@ The question I kept returning to was:
 
 ## Design principle
 
-I treated every layer of this project as a decision filter.
+I treated each layer as a decision filter.
 
-First, the churn model filters for risk. Then, the CLV layer filters for value. The lifecycle layer adds timing and customer context. The save-worthiness layer asks whether a customer clears the economics. The ROI simulator tests whether the strategy still works when assumptions change. The A/B test planner forces the final recommendation to prove itself against a holdout group.
+Churn modeling identifies risk. CLV adds customer value. Lifecycle context shows where a customer sits in the relationship. Save-worthiness scoring tests whether intervention clears cost. ROI simulation checks whether strategy still works under budget and response assumptions. A/B test planning turns the recommendation into something leadership can prove before scaling.
 
-That structure was intentional.
+That structure was intentional. I did not want a model score to trigger action by itself. In real retention work, budget is limited, and high-risk customers are not always the best customers to target.
 
-I did not want the project to recommend action from a model score alone. In a real business setting, retention money is limited. Sending offers to the highest churn scores may look logical, but it can waste budget on customers who are low value, unlikely to respond, or likely to stay anyway.
-
-So I framed the project around a more disciplined question:
+The core question became:
 
 Where does the next dollar of retention spend have the best chance of protecting value?
+
+
 
 ## How the engine works
 
