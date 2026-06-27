@@ -1,0 +1,13 @@
+section,metric,value,display_value,readout,sort_order
+Experiment overview,Candidate customers,62836.0,"62,836",Efficient-frontier save-worthy population selected for testing.,1
+Experiment overview,Treatment customers,31430.0,"31,430",Customers assigned to receive the retention intervention.,2
+Experiment overview,Control customers,31406.0,"31,406",Holdout customers for causal measurement.,3
+Experiment economics,Treatment expected saved CLV proxy,8308586.691717556,$8.31M,Expected saved CLV in the treatment arm under planning assumptions.,4
+Experiment economics,Treatment campaign cost proxy,375120.75,$375K,Estimated treatment campaign cost proxy.,5
+Experiment economics,Treatment expected net save-value proxy,7933465.941717556,$7.93M,Expected treatment net value after campaign cost.,6
+Experiment economics,Treatment ROI proxy,21.14909916798139,21.15x,Planning ROI proxy for treatment arm.,7
+Experiment economics,Break-even response rate,0.0060587784543218,0.61%,Minimum response rate needed to clear campaign cost.,8
+Experiment power,Approximate power for base effect,1.0,100.00%,Planning power for the base expected effect.,9
+Experiment effect,Expected absolute churn reduction,0.0740510121463396,7.41%,Planned treatment-control churn difference.,10
+Experiment effect,Expected relative churn reduction,0.1142620923790627,11.43%,Expected relative churn reduction under planning assumptions.,11
+Decision rule,Scale rule,,Net value + churn + guardrails,"Do not scale from churn reduction alone. Scale only if churn decreases, incremental net value is positive, and customer-experience guardrails pass.",12

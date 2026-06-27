@@ -1,0 +1,7 @@
+stage_order,stage,customers,display_value,stage_type,readout,share_of_total_customers
+1,Customers scored,970960.0,"970,960",Population,Full customer population scored by the retention engine.,1.0
+2,High-risk / high-value customers,179814.0,"179,814",Risk-value filter,$126.85M future churned CLV proxy in high-risk / high-value customers.,0.1851919749526242
+3,Economically positive paid-offer candidates,71437.0,"71,437",Save-worthiness filter,$15.83M expected net save-value proxy under planning assumptions.,0.07357357666639203
+4,A/B test candidate customers,62836.0,"62,836",Experiment population,Efficient-frontier population selected for controlled test planning.,0.06471533327840488
+5,Treatment customers,31430.0,"31,430",A/B split,Customers assigned to receive retention intervention.,0.03237002554173189
+6,Control customers,31406.0,"31,406",A/B split,Holdout customers used to measure incremental impact.,0.03234530773667298

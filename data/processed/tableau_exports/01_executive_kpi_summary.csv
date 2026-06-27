@@ -1,0 +1,24 @@
+section,metric,value,display_value,readout,sort_order
+Portfolio scale,Customers scored,970960.0,"970,960",Full customer population scored by the retention engine.,1
+Portfolio scale,Annual revenue run-rate proxy,1690000000.0,$1.69B,Portfolio-scale annual revenue baseline used for executive sizing.,2
+Portfolio scale,Annual margin run-rate proxy,1100000000.0,$1.10B,Margin-adjusted annual portfolio baseline.,3
+Portfolio scale,Profit-adjusted CLV proxy,974361046.219167,$974.36M,Estimated customer value after margin assumptions.,4
+Portfolio leakage,Future churned CLV proxy,137698149.68000007,$137.70M,Estimated customer value exposed to future churn.,5
+Portfolio leakage,CLV leakage rate,0.14132148469431635,14.13%,Share of profit-adjusted CLV exposed to future churn.,6
+Value concentration,Top 10% CLV share,0.2389090562832111,23.89%,Top CLV decile share of total profit-adjusted CLV.,7
+Value concentration,Top 10% future churned CLV share,0.7962649485896355,79.63%,Top CLV decile share of future churned CLV proxy.,8
+Value concentration,Top 5% future churned CLV share,0.7809,78.09%,Top 5% of customers account for most future churned CLV proxy.,9
+Recovery segment,Top recovery segment customers,24676.0,"24,676",Long-tenure / high engagement / high revenue segment.,10
+Recovery segment,Top recovery segment churn risk,0.4339,43.39%,Future churn risk in top recovery segment.,11
+Recovery segment,Top recovery segment future churned revenue proxy,10893857.0,$10.89M,Future churned revenue proxy in the strongest early recovery segment.,12
+Save-worthiness,Paid-offer candidates,71437.0,"71,437",Customers clearing positive paid-offer economics.,13
+Save-worthiness,Paid-offer candidate rate,0.073573576666392,7.36%,Share of total customers selected for paid-offer candidacy.,14
+Save-worthiness,Expected saved CLV proxy,16620208.953233955,$16.62M,Expected saved value under base planning assumptions.,15
+Save-worthiness,Estimated intervention cost proxy,791283.75,$791K,Estimated paid-offer campaign cost proxy.,16
+Save-worthiness,Expected net save-value proxy,15828925.203233955,$15.83M,Expected net value after intervention cost under planning assumptions.,17
+Save-worthiness,Paid-offer ROI proxy,20.004107506610566,20.00x,Planning ROI proxy for paid-offer candidates.,18
+ROI strategy,Efficient budget frontier,750000.0,$750K,Budget point that captures nearly all tested net value with less spend.,19
+ROI strategy,Value capture vs max tested net value,0.9998526991381872,99.99%,Share of maximum tested net value captured at the efficient budget cap.,20
+A/B test,A/B candidate customers,62836.0,"62,836",Efficient-frontier population selected for experiment planning.,21
+A/B test,Treatment customers,31430.0,"31,430",Customers assigned to treatment arm.,22
+A/B test,Control customers,31406.0,"31,406",Holdout customers for causal measurement.,23

@@ -1,0 +1,8 @@
+card_title,card_text,card_type,sort_order
+Recommended strategy,Target save-worthy paid-offer candidates near the efficient budget frontier.,Strategy,1
+Target population,"71,437 economically positive paid-offer candidates.",Target,2
+Budget recommendation,$750K efficient frontier captures 99.99% of maximum tested net value.,Budget,3
+Expected value,$15.83M expected net save-value proxy under base planning assumptions.,Economics,4
+ROI proxy,20.00x paid-offer ROI proxy.,Economics,5
+A/B test requirement,"Test 62,836 candidates with 31,430 treatment and 31,406 control customers.",Validation,6
+Scale rule,"Do not scale from churn reduction alone. Scale only if churn falls, incremental net value is positive, and customer-experience guardrails pass.",Decision rule,7

@@ -1,0 +1,13 @@
+section,metric,value,display_value,readout,sort_order
+Main churn model,Model,,HistGradientBoosting,Best-performing churn-risk model used for business ranking.,1
+Main churn model,ROC-AUC,0.980842275995798,0.9808,Main model discrimination performance.,2
+Main churn model,PR-AUC,0.9150849229312272,0.9151,Main model precision-recall performance.,3
+Main churn model,Top-decile lift,8.858098204470501,8.86x,Top risk decile lift versus portfolio baseline.,4
+Main churn model,Top-decile churner capture,0.8858098204470503,88.58%,Share of churners captured by highest-risk decile.,5
+Main churn model,Top-decile future churned CLV capture,0.9220492890143536,92.20%,Share of future churned CLV proxy captured by highest-risk decile.,6
+No-cancellation-signal sensitivity model,ROC-AUC,0.9406162272448956,0.9406,Sensitivity model performance after removing direct cancellation signals.,7
+No-cancellation-signal sensitivity model,PR-AUC,0.8185700142885638,0.8186,Sensitivity model precision-recall performance after removing direct cancellation signals.,8
+No-cancellation-signal sensitivity model,Top-decile lift,7.745511176255038,7.75x,Risk ranking remained strong without obvious cancellation indicators.,9
+Governance,Cancellation-signal sensitivity,,PASS,"The model still ranks churn risk without direct cancellation signals. Cancellation behavior helps, but broader engagement and transaction patterns also matter.",10
+Governance,Feature importance review,,Included,Feature-importance governance included before business recommendation.,11
+Governance,Leakage checks,,Passed,Leakage and governance checks passed before final decision logic.,12
