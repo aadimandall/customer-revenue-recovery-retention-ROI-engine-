@@ -1,5 +1,11 @@
 # Customer Revenue Recovery & Retention ROI Engine
 
+## Interactive Tableau Dashboard
+
+View the executive Tableau dashboard here: [Customer Revenue Recovery & Retention ROI Dashboard](https://public.tableau.com/views/CustomerRevenueRecoveryRetentionROIDashboard/EXECUTIVEDECISIONBOARD?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+
+This Tableau Public dashboard presents the project as an executive retention decision board, showing customer value leakage, priority retention segments, save-worthiness triage, ROI budget frontier, A/B test readiness, and model governance.
+
 Most churn projects start with the same question.
 
 Who is likely to leave?
