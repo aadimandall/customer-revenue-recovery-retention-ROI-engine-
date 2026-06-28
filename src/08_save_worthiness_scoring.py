@@ -54,11 +54,12 @@ SQL_DIR.mkdir(parents=True, exist_ok=True)
 
 CHURN_SCORED_PATH = CHURN_DIR / "churn_scored_customers.parquet"
 LIFECYCLE_FEATURES_PATH = SURVIVAL_DIR / "customer_lifecycle_survival_features.parquet"
-MODEL_VALIDATION_SUMMARY_PATH = VALIDATION_DIR / "_model_validation_business_impact_summary.json"
 
 MIN_SEGMENT_SIZE = 250
 
-
+# These are planning assumptions, not fitted model outputs.
+# I keep them explicit so the ROI simulator can later stress-test response rates,
+# intervention costs, and campaign economics under different scenarios.
 ASSUMPTIONS = {
     "economic_note": (
         "profit_adjusted_clv_proxy already includes the gross-margin assumption from the CLV layer. "
@@ -180,6 +181,9 @@ def load_inputs() -> pd.DataFrame:
     ]:
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
+    # The actual future churn label is carried forward for validation and readouts only.
+    # It is not used to calculate save-worthiness, because that would leak the outcome
+    # into the targeting decision.
     df["actual_future_churn_label"] = pd.to_numeric(
         df["actual_future_churn_label"],
         errors="coerce",
@@ -214,6 +218,9 @@ def recommend_intervention_action(df: pd.DataFrame) -> pd.DataFrame:
     low_risk_high_value = out["value_risk_quadrant"].eq("Low risk / high value")
     no_value = out["profit_adjusted_clv_proxy"].le(0)
 
+        # Rule order matters here. I suppress customers with no economic case first,
+        # then assign the highest-touch actions to customers where churn risk, CLV,
+        # and budget tier justify a paid intervention.  
     conditions = [
         no_value | no_paid_budget,
         critical_risk & high_value & premium_budget,
@@ -263,6 +270,8 @@ def attach_assumptions_and_scores(df: pd.DataFrame) -> pd.DataFrame:
         .astype(float)
     )
 
+    # Decision-time value at risk uses only predicted churn probability and CLV.
+    # Future churned CLV is kept for retrospective validation, not for scoring.
     out["gross_value_at_risk_proxy"] = (
         out["predicted_churn_probability"]
         * out["profit_adjusted_clv_proxy"]
@@ -281,6 +290,8 @@ def attach_assumptions_and_scores(df: pd.DataFrame) -> pd.DataFrame:
     denominator = out["gross_value_at_risk_proxy"].replace(0, np.nan)
     out["break_even_response_rate"] = out["intervention_cost_proxy"] / denominator
 
+    # This is a net ROI proxy: expected net save value per dollar of intervention cost.
+    # Gross return would use expected_saved_clv_proxy / intervention_cost_proxy instead.
     out["expected_roi_proxy"] = np.where(
         out["intervention_cost_proxy"] > 0,
         out["net_save_value_proxy"] / out["intervention_cost_proxy"],
@@ -318,7 +329,9 @@ def attach_assumptions_and_scores(df: pd.DataFrame) -> pd.DataFrame:
         ],
         default="Not suppressed",
     )
-
+    # Only economically positive paid-offer candidates are ranked.
+    # Non-economic customers should not be forced into a priority tier just because
+    # they have high churn probability.
     eligible = out["net_save_value_proxy"].gt(0) & out["should_receive_paid_offer"]
 
     out["save_worthiness_rank"] = np.nan
@@ -957,7 +970,8 @@ def main() -> None:
     write_sql_reference()
 
     scored.to_parquet(OUTPUT_DIR / "customer_save_worthiness_scores.parquet", index=False)
-
+    # The parquet file is the source of truth. CSV samples are exported for easier
+    # inspection and Tableau development without loading the full customer table.
     scored.head(100000).to_csv(
         OUTPUT_DIR / "tableau_save_worthiness_customer_sample.csv",
         index=False,
