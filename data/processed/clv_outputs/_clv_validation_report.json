@@ -34,5 +34,11 @@
     "status": "PASS",
     "value": 0,
     "notes": "Every customer should have a value tier, action group, and budget tier."
+  },
+  {
+    "check_name": "expected_active_months_within_bounds",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Expected active months should stay within the CLV planning bounds."
   }
 ]

@@ -27,12 +27,13 @@ OUTPUT_DIR = PROCESSED_DIR / "clv_outputs"
 SQL_DIR = Path("sql")
 
 MODELING_SNAPSHOT_PATH = PROCESSED_DIR / "modeling_customer_snapshot.parquet"
-CUSTOMER_MONTH_PATH = PROCESSED_DIR / "customer_month_table.parquet"
 
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SQL_DIR.mkdir(parents=True, exist_ok=True)
 
-
+# These are business planning assumptions, not fitted model parameters.
+# Keeping them in one dictionary makes the CLV logic easier to audit and change
+# before the churn, save-worthiness, and ROI layers use the value score.
 ASSUMPTIONS = {
     "gross_margin_rate": 0.65,
     "max_clv_months": 24,
@@ -50,13 +51,18 @@ ASSUMPTIONS = {
     ),
 }
 
-
+# This SQL builds one customer-level value row per account.
+# The churn label is carried through for retrospective value-at-risk summaries,
+# but it is not used to calculate profit-adjusted CLV.
 CUSTOMER_CLV_SQL = f"""
 CREATE OR REPLACE TABLE customer_clv_scores AS
 WITH base AS (
     SELECT
         ms.*,
 
+        -- Use the strongest observed revenue signal as the monthly value baseline.
+        -- This avoids undervaluing customers whose latest payment is more informative
+        -- than a simple monthly average.
         GREATEST(
             COALESCE(ms.monthly_revenue, 0),
             COALESCE(ms.trailing_3mo_revenue, 0) / 3.0,
@@ -92,7 +98,9 @@ ranked AS (
 expected_months AS (
     SELECT
         *,
-
+        -- Expected active months is a bounded planning proxy.
+        -- Engagement, tenure, and auto-renew increase expected duration;
+        -- cancellation and major activity drops reduce it.
         LEAST(
             {ASSUMPTIONS["max_clv_months"]},
             GREATEST(
@@ -127,6 +135,8 @@ clv_scored AS (
 
         {ASSUMPTIONS["gross_margin_rate"]} AS gross_margin_rate,
 
+        -- Profit-adjusted CLV applies the gross margin assumption once.
+        -- Later save-worthiness scripts should not multiply this by margin again.
         monthly_value_baseline * {ASSUMPTIONS["gross_margin_rate"]} AS monthly_margin_baseline,
         monthly_value_baseline * 12 AS annual_revenue_run_rate_proxy,
         monthly_value_baseline * 12 * {ASSUMPTIONS["gross_margin_rate"]} AS annual_margin_run_rate_proxy,
@@ -136,6 +146,8 @@ clv_scored AS (
             * expected_active_months_proxy
             AS profit_adjusted_clv_proxy,
 
+        -- Future churned CLV is for retrospective business-impact analysis only.
+        -- It is not used to create the CLV score itself.
         CASE
             WHEN churn_next_period = 1 THEN
                 monthly_value_baseline
@@ -152,6 +164,8 @@ clv_scored AS (
             ELSE 'Low value'
         END AS clv_value_tier,
 
+        -- These action groups are value-based planning labels.
+        -- Final retention actions are decided later after churn risk and ROI are added.
         CASE
             WHEN monthly_value_baseline <= 0 THEN 'Suppress paid offer'
             WHEN monthly_value_decile >= 9
@@ -254,7 +268,8 @@ SELECT
 FROM clv_scored
 """
 
-
+# Summary exports translate the customer-level CLV table into portfolio,
+# segment, action-group, and Tableau-ready views.
 SUMMARY_QUERIES = {
     "00_portfolio_clv_summary": """
         SELECT
@@ -474,6 +489,14 @@ def validate_outputs(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
            OR retention_budget_tier IS NULL
         """
     ).fetchone()[0]
+    expected_months_out_of_bounds = con.execute(
+        f"""
+        SELECT COUNT(*)
+        FROM customer_clv_scores
+        WHERE expected_active_months_proxy < 1
+           OR expected_active_months_proxy > {ASSUMPTIONS["max_clv_months"]}
+        """
+    ).fetchone()[0]
 
     add_check(
         "clv_table_not_empty",
@@ -517,6 +540,13 @@ def validate_outputs(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
         "Every customer should have a value tier, action group, and budget tier.",
     )
 
+    add_check(
+        "expected_active_months_within_bounds",
+        expected_months_out_of_bounds,
+        expected_months_out_of_bounds == 0,
+        "Expected active months should stay within the CLV planning bounds.",
+    )
+
     report = pd.DataFrame(checks)
     report.to_csv(OUTPUT_DIR / "_clv_validation_report.csv", index=False)
 
@@ -539,6 +569,9 @@ def write_executive_summary(results: dict[str, pd.DataFrame]) -> None:
     action_groups = results["03_value_based_action_group_summary"]
     top_targets = results["04_high_value_recovery_targets"]
 
+    # These readouts are for the project narrative and README.
+    # They summarize where value and future churned value concentrate before
+    # the churn model and ROI layers are added.
     top_value_tier = value_tiers.iloc[0]
     top_action_group = action_groups.iloc[0]
     top_target = top_targets.iloc[0]
@@ -625,11 +658,6 @@ def main() -> None:
     if not MODELING_SNAPSHOT_PATH.exists():
         raise FileNotFoundError(
             f"Missing {MODELING_SNAPSHOT_PATH}. Run src/01_build_customer_month_table.py first."
-        )
-
-    if not CUSTOMER_MONTH_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing {CUSTOMER_MONTH_PATH}. Run src/01_build_customer_month_table.py first."
         )
 
     with open(OUTPUT_DIR / "_clv_assumptions.json", "w") as f:

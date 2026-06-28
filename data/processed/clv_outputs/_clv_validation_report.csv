@@ -5,3 +5,4 @@ no_duplicate_customers,PASS,0,There should be no duplicate customer IDs in the C
 no_null_clv_values,PASS,0,Profit-adjusted CLV proxy should be populated for every customer.
 no_negative_value_metrics,PASS,0,"Revenue, margin, and CLV proxy values should not be negative."
 all_customers_have_value_tiers,PASS,0,"Every customer should have a value tier, action group, and budget tier."
+expected_active_months_within_bounds,PASS,0,Expected active months should stay within the CLV planning bounds.

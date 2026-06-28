@@ -3,20 +3,20 @@
   "future_churn_rate": 0.08994191315811156,
   "gross_margin_rate": 0.65,
   "annual_revenue_run_rate_proxy": 1694883728.0,
-  "annual_margin_run_rate_proxy": 1101674423.2007496,
-  "total_profit_adjusted_clv_proxy": 974361046.2188817,
-  "future_churned_clv_proxy": 137698149.68000054,
+  "annual_margin_run_rate_proxy": 1101674423.200799,
+  "total_profit_adjusted_clv_proxy": 974749752.3939815,
+  "future_churned_clv_proxy": 137394801.75416768,
   "top_value_tier_by_total_clv": "Elite value",
   "top_value_tier_customers": 194192,
-  "top_value_tier_future_churn_rate": 0.17676320342753563,
+  "top_value_tier_future_churn_rate": 0.17655207217599078,
   "top_action_group_by_future_churned_clv": "Protect high-value customer",
-  "top_action_group_customers": 159813,
-  "top_action_group_future_churned_clv_proxy": 106082654.96833341,
+  "top_action_group_customers": 159820,
+  "top_action_group_future_churned_clv_proxy": 106109424.30833364,
   "highest_ranked_target": {
     "msno": "OQycoqJO3X5EEGZvW5RzouQUBbF733IWZD7msBiScLo=",
     "clv_value_tier": "Elite value",
     "action_group": "High-value reactivation",
-    "profit_adjusted_clv_proxy": 80739.75,
-    "future_churned_clv_proxy": 80739.75
+    "profit_adjusted_clv_proxy": 75859.875,
+    "future_churned_clv_proxy": 75859.875
   }
 }

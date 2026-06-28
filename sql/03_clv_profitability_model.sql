@@ -4,6 +4,9 @@ WITH base AS (
     SELECT
         ms.*,
 
+        -- Use the strongest observed revenue signal as the monthly value baseline.
+        -- This avoids undervaluing customers whose latest payment is more informative
+        -- than a simple monthly average.
         GREATEST(
             COALESCE(ms.monthly_revenue, 0),
             COALESCE(ms.trailing_3mo_revenue, 0) / 3.0,
@@ -39,7 +42,9 @@ ranked AS (
 expected_months AS (
     SELECT
         *,
-
+        -- Expected active months is a bounded planning proxy.
+        -- Engagement, tenure, and auto-renew increase expected duration;
+        -- cancellation and major activity drops reduce it.
         LEAST(
             24,
             GREATEST(
@@ -74,6 +79,8 @@ clv_scored AS (
 
         0.65 AS gross_margin_rate,
 
+        -- Profit-adjusted CLV applies the gross margin assumption once.
+        -- Later save-worthiness scripts should not multiply this by margin again.
         monthly_value_baseline * 0.65 AS monthly_margin_baseline,
         monthly_value_baseline * 12 AS annual_revenue_run_rate_proxy,
         monthly_value_baseline * 12 * 0.65 AS annual_margin_run_rate_proxy,
@@ -83,6 +90,8 @@ clv_scored AS (
             * expected_active_months_proxy
             AS profit_adjusted_clv_proxy,
 
+        -- Future churned CLV is for retrospective business-impact analysis only.
+        -- It is not used to create the CLV score itself.
         CASE
             WHEN churn_next_period = 1 THEN
                 monthly_value_baseline
@@ -99,6 +108,8 @@ clv_scored AS (
             ELSE 'Low value'
         END AS clv_value_tier,
 
+        -- These action groups are value-based planning labels.
+        -- Final retention actions are decided later after churn risk and ROI are added.
         CASE
             WHEN monthly_value_baseline <= 0 THEN 'Suppress paid offer'
             WHEN monthly_value_decile >= 9
