@@ -57,7 +57,9 @@ REQUIRED_COLUMNS = [
     "retention_budget_tier",
     "future_churned_clv_proxy",
 ]
-
+# These scenarios are planning cases, not forecasts.
+# I use them to see whether the retention strategy still works when response
+# rates fall, costs rise, or leadership changes the campaign budget.
 ROI_SCENARIOS = [
     {
         "scenario_name": "Conservative",
@@ -95,7 +97,9 @@ ROI_SCENARIOS = [
         "scenario_readout": "Larger campaign push with higher execution cost.",
     },
 ]
-
+# Budget caps are used to build the capital allocation frontier.
+# The goal is not only to find the maximum net value, but to find where
+# additional retention spend stops adding meaningful return.
 BUDGET_CAPS = [
     100000,
     250000,
@@ -162,7 +166,9 @@ def load_save_worthiness_scores():
 
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
-
+    # Actual future churn is kept for retrospective validation only.
+    # The ROI simulation uses predicted risk and planning assumptions, not the
+    # realized future label, so the targeting logic stays decision-time realistic.
     df["actual_future_churn_label"] = pd.to_numeric(
         df["actual_future_churn_label"],
         errors="coerce",
@@ -175,7 +181,9 @@ def load_save_worthiness_scores():
 
     return df
 
-
+    # I compare multiple targeting cuts because the best business strategy may
+    # not be the largest customer pool. Some smaller pools can have stronger
+    # ROI or cleaner budget feasibility.
 def get_targeting_strategies(df):
     return [
         {
@@ -286,13 +294,17 @@ def calculate_roi_metrics(targeted, scenario_name, response_multiplier, cost_mul
             "budget_status": "No targets",
             "scenario_name": scenario_name,
         }
-
+    # Response and cost multipliers let the same target pool be tested under
+    # conservative, base, and upside assumptions without rebuilding the scoring layer.
     adjusted_response = (
         targeted["expected_intervention_response_rate"] * response_multiplier
     ).clip(lower=0, upper=0.60)
 
     adjusted_cost = targeted["intervention_cost_proxy"] * cost_multiplier
 
+    # The simulation keeps value-at-risk separate from expected saved value.
+    # A customer can be valuable and risky, but the campaign only creates value
+    # if the expected response clears the intervention cost.
     gross_value_at_risk = targeted["gross_value_at_risk_proxy"].sum()
     expected_saved_clv = (targeted["gross_value_at_risk_proxy"] * adjusted_response).sum()
     campaign_cost = adjusted_cost.sum()
@@ -302,6 +314,8 @@ def calculate_roi_metrics(targeted, scenario_name, response_multiplier, cost_mul
         targeted["predicted_churn_probability"] * adjusted_response
     ).sum()
 
+    # Net ROI proxy: expected net save value per dollar of campaign cost.
+    # This is stricter than using gross saved CLV because it already subtracts cost.
     roi = net_value / campaign_cost if campaign_cost > 0 else np.nan
 
     break_even_response_rate = (
@@ -485,6 +499,9 @@ def make_action_roi_summary(df):
 
 
 def make_budget_cap_frontier(df):
+    # The frontier uses only economically positive paid-offer candidates.
+    # Customers are ranked by net save value so each budget cap buys the best
+    # available expected return first.
     eligible = df[df["should_receive_paid_offer"]].copy()
     eligible = eligible.sort_values("net_save_value_proxy", ascending=False)
     eligible["base_campaign_cost"] = eligible["intervention_cost_proxy"]
@@ -799,6 +816,9 @@ def write_executive_summary(outputs, validation_report):
     best_budget = frontier.sort_values("net_save_value_proxy", ascending=False).iloc[0]
     best_break_even = break_even.sort_values("net_save_value_proxy", ascending=False).iloc[0]
 
+    # I define the efficient frontier as the smallest tested budget that captures
+    # at least 99% of the maximum tested net value. This avoids recommending extra
+    # spend when the incremental return is negligible.
     efficient_frontier = frontier.copy()
     max_net_value = efficient_frontier["net_save_value_proxy"].max()
     efficient_frontier["net_value_capture_vs_max"] = (
