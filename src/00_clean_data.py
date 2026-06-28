@@ -8,6 +8,15 @@ training population, standardizes dates and fields, and creates clean interim
 tables for the customer-month model.
 
 Raw KKBox files are intentionally not committed to GitHub.
+
+Outputs:
+- data/interim/train_clean.parquet
+- data/interim/members_clean.parquet
+- data/interim/transactions_clean.parquet
+- data/interim/user_logs_monthly.parquet
+- data/processed/data_quality_summary.json
+
+These interim tables feed the customer-month build in 01_build_customer_month_table.py.
 """
 
 from pathlib import Path
@@ -22,6 +31,24 @@ PROCESSED_DIR = Path("data/processed")
 
 INTERIM_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
+
+REQUIRED_RAW_FILES = [
+    "train_v2.csv",
+    "members_v3.csv",
+    "transactions_v2.csv",
+    "user_logs_v2.csv",
+]
+
+
+def check_raw_files() -> None:
+    missing = [filename for filename in REQUIRED_RAW_FILES if not (RAW_DIR / filename).exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Missing raw KKBox file(s): "
+            + ", ".join(missing)
+            + ". Raw files should stay local and are not committed to GitHub."
+        )
 
 
 def parse_yyyymmdd(series: pd.Series) -> pd.Series:
@@ -51,6 +78,9 @@ def clean_members(train_users: set[str]) -> pd.DataFrame:
     chunks = []
     for i, chunk in enumerate(pd.read_csv(RAW_DIR / "members_v3.csv", chunksize=1_000_000), start=1):
         chunk["msno"] = chunk["msno"].astype(str)
+
+        # Keep only labeled customers so every downstream customer row can connect
+        # back to the training churn outcome.
         chunk = chunk[chunk["msno"].isin(train_users)].copy()
 
         if chunk.empty:
@@ -92,6 +122,9 @@ def clean_transactions(train_users: set[str]) -> pd.DataFrame:
 
     tx = pd.read_csv(RAW_DIR / "transactions_v2.csv")
     tx["msno"] = tx["msno"].astype(str)
+
+    # Transactions are filtered to the labeled population before feature creation.
+    # This keeps the later customer-month table aligned with the churn label.
     tx = tx[tx["msno"].isin(train_users)].copy()
 
     tx["transaction_date_dt"] = parse_yyyymmdd(tx["transaction_date"])
@@ -112,6 +145,8 @@ def clean_transactions(train_users: set[str]) -> pd.DataFrame:
     for col in numeric_cols:
         tx[col] = pd.to_numeric(tx[col], errors="coerce").fillna(0)
 
+    # These payment features are simple behavior proxies used later for CLV,
+    # churn modeling, and save-worthiness logic.
     tx["discount_amount"] = tx["plan_list_price"] - tx["actual_amount_paid"]
     tx["is_discounted"] = (tx["discount_amount"] > 0).astype(int)
     tx["paid_per_day"] = np.where(
@@ -148,6 +183,9 @@ def clean_user_logs_monthly(train_users: set[str]) -> pd.DataFrame:
         start=1,
     ):
         chunk["msno"] = chunk["msno"].astype(str)
+
+        # User logs are large, so I filter and aggregate by month in chunks instead
+        # of carrying raw listening events into the modeling layer.
         chunk = chunk[chunk["msno"].isin(train_users)].copy()
 
         if chunk.empty:
@@ -207,6 +245,9 @@ def clean_user_logs_monthly(train_users: set[str]) -> pd.DataFrame:
         0,
     )
 
+    # Engagement score is a modeling proxy, not a fitted score.
+    # It combines listening time, unique songs, and active days on a log scale
+    # so very heavy users do not dominate the feature.
     logs_monthly["engagement_score"] = (
         np.log1p(logs_monthly["total_secs"])
         + 0.25 * np.log1p(logs_monthly["num_unq"])
@@ -220,6 +261,8 @@ def clean_user_logs_monthly(train_users: set[str]) -> pd.DataFrame:
 def write_data_quality_summary(train, members, transactions, logs_monthly) -> None:
     print("\nWriting data quality summary...")
 
+    # This summary is a quick audit trail for the pipeline. It makes it easy to
+    # confirm how much raw data survived filtering before downstream modeling starts.
     summary = {
         "train_rows": int(len(train)),
         "train_unique_users": int(train["msno"].nunique()),
@@ -248,6 +291,8 @@ def write_data_quality_summary(train, members, transactions, logs_monthly) -> No
 
 
 def main() -> None:
+    check_raw_files()
+
     train = clean_train()
     train_users = set(train["msno"])
 
