@@ -7,6 +7,8 @@ WITH month_bounds AS (
         MAX(snapshot_month_date) AS last_observed_month_date,
         MIN(snapshot_month) AS first_observed_month,
         MAX(snapshot_month) AS last_observed_month,
+        -- Count the months where the customer appears in the customer-month table.
+        -- This is observed coverage, not a guarantee of full lifetime history.
         COUNT(DISTINCT snapshot_month) AS observed_active_months
     FROM customer_month
     GROUP BY msno
@@ -41,6 +43,8 @@ base AS (
         mb.last_observed_month_date,
         COALESCE(mb.observed_active_months, 0) AS observed_active_months,
 
+        -- Duration is measured from first to last observed customer-month.
+        -- I do not treat this as an exact cancellation timestamp.
         CASE
             WHEN mb.first_observed_month_date IS NULL OR mb.last_observed_month_date IS NULL THEN 1
             ELSE DATE_DIFF('month', mb.first_observed_month_date, mb.last_observed_month_date) + 1
@@ -64,6 +68,8 @@ SELECT
         ELSE 0
     END AS observed_month_coverage_rate,
 
+    -- Combine churn risk with value because high-risk alone is not enough
+    -- to justify paid retention spend.
     CASE
         WHEN churn_risk_tier IN ('Critical risk', 'High risk')
             AND clv_value_tier IN ('Elite value', 'High value')
@@ -214,6 +220,8 @@ WITH segment_base AS (
 
         SELECT
             *,
+            -- Segment priority is a planning score for model attention.
+            -- Final offer decisions happen later through save-worthiness and ROI logic.
             future_churned_clv_proxy
                 * (1 + avg_predicted_churn_probability)
                 * CASE

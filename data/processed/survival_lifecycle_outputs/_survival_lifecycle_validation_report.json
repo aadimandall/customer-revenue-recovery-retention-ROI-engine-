@@ -18,10 +18,16 @@
     "notes": "Lifecycle duration should be at least one month."
   },
   {
+    "check_name": "observed_month_coverage_rate_within_bounds",
+    "status": "PASS",
+    "value": 0,
+    "notes": "Observed month coverage should stay between 0 and 1."
+  },
+  {
     "check_name": "overall_survival_curve_created",
     "status": "PASS",
     "value": 27,
-    "notes": "Overall Kaplan-Meier style survival curve should exist."
+    "notes": "Overall KM-style lifecycle-risk curve should exist."
   },
   {
     "check_name": "overall_survival_non_increasing",

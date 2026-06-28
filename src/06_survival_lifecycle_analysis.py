@@ -18,7 +18,6 @@ retention strategy, Tableau, and the later save-worthiness engine.
 from pathlib import Path
 import json
 import duckdb
-import numpy as np
 import pandas as pd
 
 
@@ -33,10 +32,16 @@ CHURN_SCORED_PATH = CHURN_DIR / "churn_scored_customers.parquet"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SQL_DIR.mkdir(parents=True, exist_ok=True)
 
+# Cap lifecycle curves at 36 months so the chart does not over-read sparse
+# long-tail customer-month coverage. Smaller segment curves are suppressed
+# because lifecycle timing can be noisy in small groups.
 MAX_SURVIVAL_MONTH = 36
 MIN_GROUP_SIZE = 500
 
 
+# Build one customer-level lifecycle row by combining scored churn customers with
+# observed customer-month coverage. Duration is based on observed coverage, so
+# this is a lifecycle-risk proxy rather than a precise event-history dataset.
 LIFECYCLE_BASE_SQL = """
 CREATE OR REPLACE TABLE customer_lifecycle_survival_base AS
 WITH month_bounds AS (
@@ -46,6 +51,8 @@ WITH month_bounds AS (
         MAX(snapshot_month_date) AS last_observed_month_date,
         MIN(snapshot_month) AS first_observed_month,
         MAX(snapshot_month) AS last_observed_month,
+        -- Count the months where the customer appears in the customer-month table.
+        -- This is observed coverage, not a guarantee of full lifetime history.
         COUNT(DISTINCT snapshot_month) AS observed_active_months
     FROM customer_month
     GROUP BY msno
@@ -80,6 +87,8 @@ base AS (
         mb.last_observed_month_date,
         COALESCE(mb.observed_active_months, 0) AS observed_active_months,
 
+        -- Duration is measured from first to last observed customer-month.
+        -- I do not treat this as an exact cancellation timestamp.
         CASE
             WHEN mb.first_observed_month_date IS NULL OR mb.last_observed_month_date IS NULL THEN 1
             ELSE DATE_DIFF('month', mb.first_observed_month_date, mb.last_observed_month_date) + 1
@@ -103,6 +112,8 @@ SELECT
         ELSE 0
     END AS observed_month_coverage_rate,
 
+    -- Combine churn risk with value because high-risk alone is not enough
+    -- to justify paid retention spend.
     CASE
         WHEN churn_risk_tier IN ('Critical risk', 'High risk')
             AND clv_value_tier IN ('Elite value', 'High value')
@@ -139,6 +150,8 @@ FROM base
 """
 
 
+# Summary exports turn the customer-level lifecycle base into portfolio,
+# timing, value/risk, model-priority, and Tableau-ready views.
 SUMMARY_QUERIES = {
     "00_portfolio_lifecycle_summary": """
         SELECT
@@ -260,6 +273,8 @@ SUMMARY_QUERIES = {
 
         SELECT
             *,
+            -- Segment priority is a planning score for model attention.
+            -- Final offer decisions happen later through save-worthiness and ROI logic.
             future_churned_clv_proxy
                 * (1 + avg_predicted_churn_probability)
                 * CASE
@@ -343,6 +358,8 @@ def export_query(con: duckdb.DuckDBPyConnection, name: str, query: str) -> pd.Da
     return df
 
 
+# KM-style curves provide timing intuition from observed lifecycle duration.
+# They should be read as lifecycle-risk curves, not formal survival inference.
 def kaplan_meier_curve(
     df: pd.DataFrame,
     group_cols=None,
@@ -491,11 +508,23 @@ def validate_outputs(
         "Lifecycle duration should be at least one month.",
     )
 
+    coverage_out_of_bounds = (
+        (lifecycle_df["observed_month_coverage_rate"] < 0)
+        | (lifecycle_df["observed_month_coverage_rate"] > 1)
+    ).sum()
+
+    add_check(
+        "observed_month_coverage_rate_within_bounds",
+        int(coverage_out_of_bounds),
+        coverage_out_of_bounds == 0,
+        "Observed month coverage should stay between 0 and 1.",
+    )
+
     add_check(
         "overall_survival_curve_created",
         len(survival_overall),
         len(survival_overall) > 0,
-        "Overall Kaplan-Meier style survival curve should exist.",
+        "Overall KM-style lifecycle-risk curve should exist.",
     )
 
     survival_non_increasing = (
@@ -544,7 +573,6 @@ def validate_outputs(
 def write_executive_summary(
     results: dict[str, pd.DataFrame],
     survival_overall: pd.DataFrame,
-    survival_timepoints: pd.DataFrame,
 ) -> None:
     portfolio = results["00_portfolio_lifecycle_summary"].iloc[0]
     lifecycle_stage = results["01_lifecycle_stage_summary"]
@@ -771,7 +799,7 @@ def main() -> None:
     print(f"Saved {OUTPUT_DIR / '10_km_survival_by_value_risk_quadrant.csv'}")
     print(f"Saved {OUTPUT_DIR / '11_survival_timepoint_summary.csv'}")
 
-    validation_report = validate_outputs(
+    validate_outputs(
         lifecycle_df=lifecycle_df,
         survival_overall=survival_overall,
         survival_quadrant=survival_quadrant,
@@ -781,7 +809,6 @@ def main() -> None:
     write_executive_summary(
         results=results,
         survival_overall=survival_overall,
-        survival_timepoints=survival_timepoints,
     )
 
     print("\n06_survival_lifecycle_analysis.py complete.")
