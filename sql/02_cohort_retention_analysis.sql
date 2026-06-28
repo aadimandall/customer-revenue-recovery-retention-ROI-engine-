@@ -1,5 +1,7 @@
 -- 01_monthly_revenue_leakage
 SELECT
+            -- This is a historical customer-month view. The churn label is a future
+            -- label attached to the customer, not a churn event inside each month.
             snapshot_month,
             COUNT(DISTINCT msno) AS observed_customers,
             SUM(monthly_revenue) AS total_monthly_revenue_proxy,
@@ -17,6 +19,8 @@ SELECT
 
 -- 02_cohort_retention_long
 WITH customer_first_month AS (
+            -- Cohorts are based on first observed activity/payment month in this
+            -- project data, not the customer's true lifetime signup month.
             SELECT
                 msno,
                 MIN(snapshot_month_date) AS first_observed_month_date,
@@ -61,6 +65,8 @@ WITH customer_first_month AS (
             a.months_since_first_observed,
             s.cohort_size,
             a.observed_users,
+            -- Observed retention means the customer appears again in the customer-month table.
+            -- It should not be read as exact contractual renewal survival.
             CAST(a.observed_users AS DOUBLE) / NULLIF(s.cohort_size, 0) AS observed_retention_rate,
             a.cohort_monthly_revenue_proxy,
             a.future_churned_revenue_proxy,
@@ -139,6 +145,8 @@ SELECT
 
 -- 07_retention_risk_segment_matrix
 SELECT
+            -- Segment matrix uses the latest modeling snapshot so each customer
+            -- contributes once to the retention strategy readout.
             lifecycle_stage,
             engagement_tier,
             revenue_tier,
@@ -191,6 +199,8 @@ WITH segment_base AS (
 
         SELECT
             *,
+            -- This score is a descriptive prioritization heuristic. It identifies
+            -- segments worth deeper CLV/model review, not final campaign eligibility.
             future_churned_revenue_proxy
                 * (1 + cancellation_signal_rate)
                 AS revenue_recovery_priority_score,

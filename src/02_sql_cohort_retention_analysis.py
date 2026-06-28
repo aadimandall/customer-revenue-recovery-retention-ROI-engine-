@@ -17,6 +17,16 @@ that label as if churn happened in every historical month. For historical
 customer-month views, I call the measure "future churn label" or "future churned
 revenue proxy." For modeling and strategy views, I use the latest customer snapshot
 so the churn label is aligned to the decision point.
+
+Outputs:
+- data/processed/cohort_retention_outputs/*.csv
+- data/processed/cohort_retention_outputs/_cohort_retention_summary.json
+- data/processed/cohort_retention_outputs/_executive_cohort_retention_summary.md
+- sql/02_cohort_retention_analysis.sql
+
+This layer is descriptive. It finds where risk and exposed revenue concentrate
+before the later CLV, churn model, save-worthiness, and ROI layers make targeting
+decisions.
 """
 
 from pathlib import Path
@@ -36,9 +46,26 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SQL_DIR.mkdir(parents=True, exist_ok=True)
 
 
+REQUIRED_INPUTS = [CUSTOMER_MONTH_PATH, MODELING_SNAPSHOT_PATH]
+
+
+def check_required_inputs() -> None:
+    missing = [str(path) for path in REQUIRED_INPUTS if not path.exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Missing required processed file(s): "
+            + ", ".join(missing)
+            + ". Run src/01_build_customer_month_table.py first."
+        )
+
+
+# These SQL exports are intentionally descriptive. They diagnose activity,
+# cohort, lifecycle, engagement, and revenue exposure before predictive modeling.
 SQL_QUERIES = {
     "01_monthly_revenue_leakage": """
         SELECT
+            -- This is a historical customer-month view. The churn label is a future
+            -- label attached to the customer, not a churn event inside each month.
             snapshot_month,
             COUNT(DISTINCT msno) AS observed_customers,
             SUM(monthly_revenue) AS total_monthly_revenue_proxy,
@@ -57,6 +84,8 @@ SQL_QUERIES = {
 
     "02_cohort_retention_long": """
         WITH customer_first_month AS (
+            -- Cohorts are based on first observed activity/payment month in this
+            -- project data, not the customer's true lifetime signup month.
             SELECT
                 msno,
                 MIN(snapshot_month_date) AS first_observed_month_date,
@@ -101,6 +130,8 @@ SQL_QUERIES = {
             a.months_since_first_observed,
             s.cohort_size,
             a.observed_users,
+            -- Observed retention means the customer appears again in the customer-month table.
+            -- It should not be read as exact contractual renewal survival.
             CAST(a.observed_users AS DOUBLE) / NULLIF(s.cohort_size, 0) AS observed_retention_rate,
             a.cohort_monthly_revenue_proxy,
             a.future_churned_revenue_proxy,
@@ -184,6 +215,8 @@ SQL_QUERIES = {
 
     "07_retention_risk_segment_matrix": """
         SELECT
+            -- Segment matrix uses the latest modeling snapshot so each customer
+            -- contributes once to the retention strategy readout.
             lifecycle_stage,
             engagement_tier,
             revenue_tier,
@@ -237,6 +270,8 @@ SQL_QUERIES = {
 
         SELECT
             *,
+            -- This score is a descriptive prioritization heuristic. It identifies
+            -- segments worth deeper CLV/model review, not final campaign eligibility.
             future_churned_revenue_proxy
                 * (1 + cancellation_signal_rate)
                 AS revenue_recovery_priority_score,
@@ -315,6 +350,8 @@ SQL_QUERIES = {
 }
 
 
+# Save the SQL separately so reviewers can inspect the business logic without
+# opening the Python orchestration code.
 def write_sql_file() -> None:
     sql_path = SQL_DIR / "02_cohort_retention_analysis.sql"
     with open(sql_path, "w") as f:
@@ -333,6 +370,8 @@ def export_query(con: duckdb.DuckDBPyConnection, name: str, query: str) -> pd.Da
     return df
 
 
+# Tableau and spreadsheet review are easier with both a long cohort table and
+# a wide matrix version.
 def create_cohort_matrix(cohort_long: pd.DataFrame) -> pd.DataFrame:
     matrix = cohort_long.pivot_table(
         index="first_observed_month",
@@ -352,6 +391,8 @@ def create_cohort_matrix(cohort_long: pd.DataFrame) -> pd.DataFrame:
     return matrix
 
 
+# Write a recruiter-readable summary that connects the descriptive cohort layer
+# to the later CLV, churn modeling, and ROI decision layers.
 def write_executive_summary(results: dict[str, pd.DataFrame]) -> None:
     monthly = results["01_monthly_revenue_leakage"]
     engagement = results["03_engagement_tier_churn_revenue"]
@@ -438,11 +479,7 @@ def write_executive_summary(results: dict[str, pd.DataFrame]) -> None:
 def main() -> None:
     print("\nRunning cohort retention and revenue leakage analysis...")
 
-    if not CUSTOMER_MONTH_PATH.exists():
-        raise FileNotFoundError(f"Missing {CUSTOMER_MONTH_PATH}. Run src/01_build_customer_month_table.py first.")
-
-    if not MODELING_SNAPSHOT_PATH.exists():
-        raise FileNotFoundError(f"Missing {MODELING_SNAPSHOT_PATH}. Run src/01_build_customer_month_table.py first.")
+    check_required_inputs()
 
     con = duckdb.connect(database=":memory:")
 
