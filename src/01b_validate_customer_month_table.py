@@ -10,6 +10,14 @@ Tableau reporting, and Streamlit.
 
 The goal is to catch data model issues early: duplicate customer-month rows, duplicate
 snapshot rows, missing churn labels, invalid revenue values, and incomplete output files.
+
+Outputs:
+- data/processed/customer_month_validation_report.csv
+- data/processed/customer_month_validation_report.json
+- data/processed/customer_month_validation_report.txt
+
+This file is intentionally separate from 01_build_customer_month_table.py so validation
+can be rerun without rebuilding the full customer-month layer.
 """
 
 from pathlib import Path
@@ -29,6 +37,8 @@ VALIDATION_JSON = PROCESSED_DIR / "customer_month_validation_report.json"
 VALIDATION_TXT = PROCESSED_DIR / "customer_month_validation_report.txt"
 
 
+# Keep validation checks in a simple list-of-dicts format so the report can be
+# written to CSV, JSON, and text without separate formatting logic.
 def add_check(checks, check_name, value, pass_condition, notes):
     status = "PASS" if pass_condition else "FAIL"
     checks.append(
@@ -44,6 +54,7 @@ def add_check(checks, check_name, value, pass_condition, notes):
 def main() -> None:
     print("\nValidating customer-month outputs...")
 
+    # Fail fast if the build step did not create the expected downstream files.
     missing_files = [
         str(path)
         for path in [CUSTOMER_MONTH_PATH, MODELING_SNAPSHOT_PATH, TABLEAU_BASE_PATH]
@@ -71,6 +82,8 @@ def main() -> None:
 
     checks = []
 
+    # Basic grain checks: customer_month can have many rows per customer,
+    # while modeling_snapshot should have exactly one row per labeled customer.
     customer_month_rows = con.execute("SELECT COUNT(*) FROM customer_month").fetchone()[0]
     customer_month_users = con.execute("SELECT COUNT(DISTINCT msno) FROM customer_month").fetchone()[0]
     snapshot_rows = con.execute("SELECT COUNT(*) FROM modeling_snapshot").fetchone()[0]
@@ -92,6 +105,7 @@ def main() -> None:
         "Modeling snapshot should have rows.",
     )
 
+    # Duplicate customer-month rows would break cohort analysis and rolling features.
     duplicate_customer_months = con.execute(
         """
         SELECT COUNT(*)
@@ -112,6 +126,8 @@ def main() -> None:
         "There should be only one row per customer per observed month.",
     )
 
+    # The snapshot is the decision table used by CLV, churn, and ROI scripts,
+    # so duplicate customers here would duplicate downstream recommendations.
     duplicate_snapshot_users = con.execute(
         """
         SELECT COUNT(*)
@@ -140,6 +156,7 @@ def main() -> None:
         "Snapshot row count should match distinct customer count.",
     )
 
+    # Every snapshot row needs a churn label because the next modeling layer is supervised.
     missing_target_rows = con.execute(
         """
         SELECT COUNT(*)
@@ -204,6 +221,8 @@ def main() -> None:
         "Tenure should not be strongly negative. Small edge cases may come from date alignment.",
     )
 
+    # This is informational, not a failure. Some labeled customers have no observed
+    # transaction/activity month after filtering, but they are still kept in the snapshot.
     users_without_observed_month = con.execute(
         """
         SELECT COUNT(*)
@@ -245,6 +264,7 @@ def main() -> None:
         "CSV export for Tableau should exist and be non-empty.",
     )
 
+    # Persist validation results so the project has an audit trail before modeling starts.
     report = pd.DataFrame(checks)
     report.to_csv(VALIDATION_CSV, index=False)
 
