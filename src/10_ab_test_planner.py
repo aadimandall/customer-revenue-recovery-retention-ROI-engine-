@@ -29,7 +29,7 @@ It builds:
 5. Break-even and rollout decision rules
 6. Tableau-ready experiment planning outputs
 
-Human note:
+Launch-readiness note:
 The goal is not to make a retention campaign look good on paper.
 The goal is to give leadership a test that can kill the idea if the economics do not hold.
 """
@@ -57,11 +57,15 @@ ROI_MATRIX_PATH = ROI_DIR / "01_strategy_scenario_matrix.csv"
 BUDGET_FRONTIER_PATH = ROI_DIR / "03_budget_cap_frontier.csv"
 BEST_STRATEGY_PATH = ROI_DIR / "05_best_strategy_by_scenario.csv"
 
+# The assignment needs to be reproducible. A fixed seed lets the same customer
+# receive the same treatment/control assignment every time the script runs.
 RANDOMIZATION_SEED = "customer_revenue_recovery_ab_test_v1"
 PRIMARY_ALPHA = 0.05
 DEFAULT_TREATMENT_SHARE = 0.50
 
 # Z constants avoid adding a scipy dependency.
+# These power calculations are planning approximations, not a replacement for
+# a full statistical testing package in production.
 Z_ALPHA_05_TWO_SIDED = 1.96
 Z_POWER = {
     0.80: 0.84,
@@ -173,7 +177,9 @@ def approximate_power_two_proportion(p_control, p_treatment, n_per_group, alpha=
 
     return float(np.clip(normal_cdf(z_effect), 0, 1))
 
-
+# Hash-based randomization makes assignment stable without storing a separate
+# random number file. This is useful for a portfolio pipeline because reruns
+# should not reshuffle customers.
 def stable_random_number(value, seed=RANDOMIZATION_SEED):
     raw = f"{seed}|{value}".encode("utf-8")
     digest = hashlib.sha256(raw).hexdigest()[:16]
@@ -213,6 +219,9 @@ def load_inputs():
     for col in numeric_cols:
         save_scores[col] = pd.to_numeric(save_scores[col], errors="coerce").fillna(0)
 
+    # Actual future churn is retrospective only. It supports validation and
+    # balance diagnostics, but the planned targeting decision is based on
+    # predicted churn risk, CLV, and expected campaign economics.
     save_scores["actual_future_churn_label"] = save_scores["actual_future_churn_label"].astype(int)
     save_scores["should_receive_paid_offer"] = save_scores["should_receive_paid_offer"].astype(bool)
 
@@ -224,6 +233,9 @@ def load_inputs():
 
 
 def choose_efficient_budget_frontier(budget_frontier):
+    # Use the same efficient-frontier idea from the ROI simulator:
+    # choose the smallest tested budget that captures at least 99% of the
+    # maximum tested net value.
     frontier = budget_frontier.copy()
     frontier["net_save_value_proxy"] = pd.to_numeric(
         frontier["net_save_value_proxy"],
@@ -251,6 +263,8 @@ def choose_efficient_budget_frontier(budget_frontier):
 def build_experiment_population(save_scores, budget_frontier):
     efficient_budget = choose_efficient_budget_frontier(budget_frontier)
 
+    # Start with customers who are economically positive paid-offer candidates.
+    # The experiment should test the recommended strategy, not a broad churn-risk list.
     eligible = save_scores[
         save_scores["should_receive_paid_offer"]
         & save_scores["net_save_value_proxy"].gt(0)
@@ -262,6 +276,8 @@ def build_experiment_population(save_scores, budget_frontier):
         ascending=[False, False, False],
     ).reset_index(drop=True)
 
+    # Rank by expected net value, then add customers until the efficient budget
+    # cap is reached. This keeps the test aligned with the ROI frontier.
     eligible["rollout_cumulative_cost_proxy"] = eligible["intervention_cost_proxy"].cumsum()
 
     budget_cap = float(efficient_budget["budget_cap"])
@@ -273,6 +289,8 @@ def build_experiment_population(save_scores, budget_frontier):
     if experiment_population.empty:
         experiment_population = eligible.head(5000).copy()
 
+    # Stratification keeps treatment and control comparable across the segments
+    # that matter most for interpretation: priority, risk, value, and lifecycle.
     stratification_cols = [
         "save_priority_tier",
         "churn_risk_tier",
@@ -287,6 +305,8 @@ def build_experiment_population(save_scores, budget_frontier):
         .agg(" | ".join, axis=1)
     )
 
+    # The randomization score is deterministic, so the assignment can be audited
+    # and recreated without relying on a one-time random draw.
     experiment_population["ab_test_randomization_score"] = (
         experiment_population["msno"]
         .astype(str)
@@ -368,6 +388,8 @@ def make_experiment_design_summary(experiment_population):
 
     p_control = float(control["predicted_churn_probability"].mean())
 
+    # This is the planning treatment churn rate, not an observed result.
+    # The actual treatment effect would come from the live experiment readout.
     expected_treatment_churn_rate = float(
         (
             treatment["predicted_churn_probability"]
@@ -381,6 +403,8 @@ def make_experiment_design_summary(experiment_population):
     treatment_gross_value_at_risk = float(treatment["gross_value_at_risk_proxy"].sum())
     treatment_expected_saved_clv = float(treatment["expected_saved_clv_proxy"].sum())
     treatment_net_value = treatment_expected_saved_clv - treatment_cost
+    # Business success is measured after campaign cost, so a churn reduction
+    # alone is not enough to justify rollout.
 
     expected_customers_saved = float(
         (
@@ -859,6 +883,8 @@ def make_treatment_control_balance_diagnostics(experiment_population):
             )
         )
 
+        # Standardized differences make balance easier to compare across
+        # features with very different scales.
         standardized_difference = (
             absolute_difference / pooled_std
             if pooled_std > 0
@@ -1268,6 +1294,7 @@ def write_executive_summary(outputs, validation_report):
 def main():
     print("\nRunning A/B test planner...")
 
+    #save_scores, _roi_matrix, budget_frontier, _best_strategy = load_inputs()
     save_scores, roi_matrix, budget_frontier, best_strategy = load_inputs()
 
     experiment_population, efficient_budget = build_experiment_population(
