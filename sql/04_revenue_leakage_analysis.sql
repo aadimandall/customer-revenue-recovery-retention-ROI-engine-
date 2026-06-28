@@ -108,6 +108,8 @@ SELECT
 WITH ranked AS (
             SELECT
                 *,
+                -- Rank customers by CLV to show whether value leakage is concentrated
+                -- in the most valuable accounts.
                 NTILE(10) OVER (ORDER BY profit_adjusted_clv_proxy DESC) AS clv_rank_decile
             FROM customer_clv
         ),
@@ -185,6 +187,8 @@ WITH segment_base AS (
 
         SELECT
             *,
+            -- This is a segment-level diagnostic score, not a final customer score.
+            -- It highlights where churned value, cancellation signals, and activity drops overlap.
             future_churned_clv_proxy
                 * (1 + cancellation_signal_rate)
                 * (1 + major_activity_drop_rate)
@@ -452,6 +456,8 @@ WITH segment_base AS (
 
         SELECT
             *,
+            -- This score ranks segments for modeling attention.
+            -- Final customer-level targeting happens later with predicted churn probability and ROI.
             future_churned_clv_proxy
                 * (1 + future_churn_rate)
                 * CASE

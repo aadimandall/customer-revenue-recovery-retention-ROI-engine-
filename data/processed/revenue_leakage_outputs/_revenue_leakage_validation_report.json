@@ -8,19 +8,19 @@
   {
     "check_name": "positive_profit_adjusted_clv",
     "status": "PASS",
-    "value": 974361046.22,
+    "value": 974749752.39,
     "notes": "Total CLV proxy should be positive."
   },
   {
     "check_name": "positive_future_churned_clv",
     "status": "PASS",
-    "value": 137698149.68,
+    "value": 137394801.75,
     "notes": "Future churned CLV proxy should be positive for leakage analysis."
   },
   {
     "check_name": "leakage_rate_reasonable",
     "status": "PASS",
-    "value": 0.141321,
+    "value": 0.140954,
     "notes": "Leakage rate should be between 0 and 100%."
   },
   {
@@ -44,7 +44,7 @@
   {
     "check_name": "base_recovery_opportunity_positive",
     "status": "PASS",
-    "value": 13769814.97,
+    "value": 13739480.18,
     "notes": "Base recovery opportunity should be positive."
   },
   {

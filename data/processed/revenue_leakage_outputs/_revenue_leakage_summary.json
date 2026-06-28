@@ -2,16 +2,16 @@
   "customers": 970960,
   "future_churn_rate": 0.08994191315811156,
   "annual_revenue_run_rate_proxy": 1694883728.0,
-  "annual_margin_run_rate_proxy": 1101674423.2008798,
-  "profit_adjusted_clv_proxy": 974361046.2191298,
-  "future_churned_clv_proxy": 137698149.68000025,
-  "clv_leakage_rate": 0.14132148469432193,
+  "annual_margin_run_rate_proxy": 1101674423.2008517,
+  "profit_adjusted_clv_proxy": 974749752.3941678,
+  "future_churned_clv_proxy": 137394801.75416672,
+  "clv_leakage_rate": 0.14095392321639413,
   "top_action_group": {
     "value_based_action_group": "Protect high-value customer",
     "retention_budget_tier": "Premium save budget",
-    "customers": 159813,
-    "future_churn_rate": 0.14580165568508194,
-    "future_churned_clv_proxy": 106082654.96833354
+    "customers": 159820,
+    "future_churn_rate": 0.14586409710924791,
+    "future_churned_clv_proxy": 106109424.30833358
   },
   "top_leakage_driver_segment": {
     "lifecycle_stage": "Long-tenure",
@@ -21,36 +21,36 @@
     "action_group": "Protect high-value customer",
     "customers": 54901,
     "future_churn_rate": 0.20209103659314037,
-    "future_churned_clv_proxy": 62930292.62000017,
+    "future_churned_clv_proxy": 62930292.620000176,
     "strategy_readout": "Model should prioritize"
   },
   "top_value_decile": {
     "customers": 97096,
-    "clv_share": 0.2389090562832111,
-    "future_churned_clv_share": 0.7962649485896355,
-    "future_churn_rate": 0.2125731235066326
+    "clv_share": 0.2386550798952572,
+    "future_churned_clv_share": 0.79682291507567,
+    "future_churn_rate": 0.21226415094339623
   },
   "top_5_threshold": {
     "customers": 48548,
-    "clv_share": 0.168061066348433,
-    "future_churned_clv_share": 0.7809037841216676
+    "clv_share": 0.16784583988689056,
+    "future_churned_clv_share": 0.7810620941128534
   },
   "top_10_threshold": {
     "customers": 97096,
-    "clv_share": 0.23890905628322695,
-    "future_churned_clv_share": 0.79630574289234
+    "clv_share": 0.23865507989527585,
+    "future_churned_clv_share": 0.7967820307050218
   },
   "base_recovery_scenario": {
     "recovery_rate": 0.1,
-    "recoverable_portfolio_clv_proxy": 13769814.968000025,
-    "recoverable_premium_budget_clv_proxy": 12082617.666166693
+    "recoverable_portfolio_clv_proxy": 13739480.175416673,
+    "recoverable_premium_budget_clv_proxy": 12039172.680166677
   },
   "best_budget_opportunity": {
     "retention_budget_tier": "Premium save budget",
     "campaign_cost_proxy": 2912880.0,
-    "recoverable_clv_proxy": 14499141.19940003,
-    "net_recovery_opportunity_proxy": 11586261.19940003,
-    "roi_proxy": 3.977596467894328
+    "recoverable_clv_proxy": 14447007.21620001,
+    "net_recovery_opportunity_proxy": 11534127.21620001,
+    "roi_proxy": 3.9596987229820697
   },
   "top_model_priority_segment": {
     "lifecycle_stage": "Long-tenure",

@@ -41,6 +41,9 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 SQL_DIR.mkdir(parents=True, exist_ok=True)
 
 
+# These assumptions are for leakage sizing and rough recovery opportunity.
+# The ROI simulator later turns offer cost, response, and budget assumptions
+# into decision levers.
 ASSUMPTIONS = {
     "recovery_scenarios": {
         "Conservative recovery": 0.05,
@@ -68,6 +71,9 @@ ASSUMPTIONS = {
 }
 
 
+# Each query produces a portfolio, segment, concentration, or model-priority view.
+# This layer diagnoses where value is leaking; it does not create the final
+# customer targeting list.
 SQL_QUERIES = {
     "00_revenue_leakage_portfolio_summary": """
         SELECT
@@ -183,6 +189,8 @@ SQL_QUERIES = {
         WITH ranked AS (
             SELECT
                 *,
+                -- Rank customers by CLV to show whether value leakage is concentrated
+                -- in the most valuable accounts.
                 NTILE(10) OVER (ORDER BY profit_adjusted_clv_proxy DESC) AS clv_rank_decile
             FROM customer_clv
         ),
@@ -261,6 +269,8 @@ SQL_QUERIES = {
 
         SELECT
             *,
+            -- This is a segment-level diagnostic score, not a final customer score.
+            -- It highlights where churned value, cancellation signals, and activity drops overlap.
             future_churned_clv_proxy
                 * (1 + cancellation_signal_rate)
                 * (1 + major_activity_drop_rate)
@@ -535,6 +545,8 @@ SQL_QUERIES = {
 
         SELECT
             *,
+            -- This score ranks segments for modeling attention.
+            -- Final customer-level targeting happens later with predicted churn probability and ROI.
             future_churned_clv_proxy
                 * (1 + future_churn_rate)
                 * CASE
@@ -603,12 +615,11 @@ def validate_outputs(results: dict[str, pd.DataFrame]) -> pd.DataFrame:
         checks.append(
             {
                 "check_name": check_name,
-                "status": "PASS if passed else FAIL",
+                "status": "PASS" if passed else "FAIL",
                 "value": value,
                 "notes": notes,
             }
         )
-        checks[-1]["status"] = "PASS" if passed else "FAIL"
 
     portfolio = results["00_revenue_leakage_portfolio_summary"].iloc[0]
     concentration = results["04_clv_concentration_deciles"]
