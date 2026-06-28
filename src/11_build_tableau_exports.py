@@ -42,6 +42,7 @@ def write_csv(df: pd.DataFrame, filename: str) -> None:
     df.to_csv(path, index=False)
     print(f"Created {path.relative_to(ROOT)} | {len(df):,} rows x {len(df.columns):,} columns")
 
+
 # Display helpers keep Tableau labels consistent across KPI cards, tooltips,
 # and executive recommendation views.
 def money(x, decimals=2):
