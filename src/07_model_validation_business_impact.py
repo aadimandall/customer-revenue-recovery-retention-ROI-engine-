@@ -25,7 +25,6 @@ intervention cost, and ROI.
 
 from pathlib import Path
 import json
-import math
 
 import numpy as np
 import pandas as pd
@@ -50,6 +49,8 @@ CHURN_SUMMARY_PATH = CHURN_DIR / "_churn_model_summary.json"
 FEATURE_AUDIT_PATH = CHURN_DIR / "_model_feature_and_leakage_audit.json"
 TRAINING_MANIFEST_PATH = CHURN_DIR / "_model_training_manifest.json"
 
+# Segment readouts below this size can be noisy, so I filter small groups
+# before turning them into business recommendations.
 MIN_SEGMENT_SIZE = 500
 
 
@@ -114,6 +115,8 @@ def load_inputs():
     require_file(CALIBRATION_PATH, "src/05_churn_model.py")
     require_file(SCORED_CUSTOMERS_PATH, "src/05_churn_model.py")
 
+    # This layer does not retrain the model. It reads the modeling outputs and
+    # translates them into business validation, governance, and planning views.
     model_comparison = pd.read_csv(MODEL_COMPARISON_PATH)
     decile = pd.read_csv(DECILE_PATH)
     threshold = pd.read_csv(THRESHOLD_PATH)
@@ -156,6 +159,8 @@ def load_inputs():
 
 
 def pick_best_model(model_comparison):
+    # PR-AUC is prioritized because churn is an imbalanced targeting problem.
+    # ROC-AUC and top-decile lift are supporting ranking-quality checks.
     sorted_models = model_comparison.sort_values(
         ["pr_auc", "roc_auc", "top_decile_lift"],
         ascending=False,
@@ -165,6 +170,8 @@ def pick_best_model(model_comparison):
 
 
 def business_grade(roc_auc, pr_auc, base_churn_rate, top_decile_lift, top20_value_capture):
+    # PR-AUC is compared against the base churn rate so the score reflects
+    # improvement over the natural churn prevalence, not just an isolated metric.
     pr_auc_multiple = pr_auc / base_churn_rate if base_churn_rate > 0 else np.nan
 
     if (
@@ -201,6 +208,8 @@ def make_validation_kpi_summary(inputs):
 
     best, _ = pick_best_model(model_comparison)
 
+    # The top decile is the key operating check: a useful ranking model should
+    # concentrate churners and churned value near the top of the score distribution.
     top_decile = decile.loc[decile["risk_decile"] == 1].iloc[0]
 
     top20 = threshold.loc[
@@ -341,6 +350,8 @@ def make_decile_business_lift_scorecard(decile):
         default="Review",
     )
 
+    # A random decile would capture about 10% of churned value.
+    # Anything above that shows value concentration from the risk ranking.
     out["decile_value_capture_gap"] = (
         out["future_churned_clv_share"] - 0.10
     )
@@ -358,12 +369,16 @@ def make_threshold_business_policy_scorecard(threshold):
         .fillna(out["future_churned_clv_capture_rate"])
     )
 
+    # This score is only a planning aid. It combines churn capture, value capture,
+    # and lift so leadership can compare target-size tradeoffs before ROI scoring.
     out["targeting_efficiency_score"] = (
         0.40 * out["churn_capture_rate"]
         + 0.40 * out["future_churned_clv_capture_rate"]
         + 0.20 * np.minimum(out["lift_vs_portfolio"] / 10, 1)
     )
 
+    # The top 20% risk group is a planning reference, not the final campaign list.
+    # Save-worthiness and ROI decide who actually receives paid retention.
     top20_mask = np.isclose(out["target_population_pct"], 0.20)
 
     out["operating_point_readout"] = np.select(
@@ -394,6 +409,8 @@ def make_threshold_business_policy_scorecard(threshold):
 def make_calibration_risk_diagnostic(calibration):
     out = calibration.copy().sort_values("calibration_bin")
 
+    # Calibration matters for planning budgets, but the model's primary use here
+    # is ranking customers by relative churn risk.
     out["absolute_calibration_gap"] = out["calibration_gap"].abs()
 
     out["calibration_status"] = np.select(
@@ -456,6 +473,8 @@ def make_risk_tier_value_impact(scored):
         0,
     )
 
+    # This separates high-risk/high-value customers from high-risk/low-value customers.
+    # High churn risk alone is not enough to justify a paid save offer.
     out["risk_value_readout"] = np.select(
         [
             (out["churn_risk_tier"].isin(["Critical risk", "High risk"]))
@@ -550,6 +569,8 @@ def make_segment_intervention_priority(scored):
 def make_cancellation_signal_sensitivity_readout(model_comparison):
     rows = []
 
+    # The no-cancel-signal comparison checks whether the model still ranks churn
+    # well without relying only on direct cancellation behavior.
     main = model_comparison[
         model_comparison["model_name"].eq("hist_gradient_boosting")
     ]
@@ -634,6 +655,9 @@ def make_feature_importance_governance_readout(feature_importance):
             ]
         )
 
+    # Grouping features into signal families makes the model easier to govern.
+    # The goal is to explain whether risk comes from cancellation, engagement,
+    # payment behavior, or customer lifecycle patterns.
     direct_cancel_features = {
         "had_cancel",
         "latest_is_cancel",
@@ -712,6 +736,8 @@ def make_feature_importance_governance_readout(feature_importance):
         "positive_importance",
     ].sum()
 
+    # This share is a governance diagnostic, not a model-selection rule by itself.
+    # A high cancellation-signal share means the model may be less useful for early intervention.
     direct_cancel_share = (
         direct_cancel_importance / total_positive_importance
         if total_positive_importance > 0
@@ -776,6 +802,8 @@ def make_feature_importance_governance_readout(feature_importance):
 def make_leakage_and_governance_check(feature_audit, training_manifest):
     rows = []
 
+    # This reuses the churn-model audit file to make sure future-value fields,
+    # target fields, and final action labels stayed out of the feature matrix.
     forbidden = set(feature_audit.get("forbidden_model_features", []))
     numeric = set(feature_audit.get("numeric_features_main_model", []))
     categorical = set(feature_audit.get("categorical_features", []))
@@ -827,6 +855,8 @@ def make_leakage_and_governance_check(feature_audit, training_manifest):
 
 
 def choose_recommended_operating_point(threshold_scorecard):
+    # Choose a planning threshold that captures strong churned value without
+    # expanding too far before economic targeting is applied.
     candidates = threshold_scorecard[
         threshold_scorecard["target_population_pct"] <= 0.20
     ].copy()
@@ -1038,6 +1068,9 @@ def write_executive_summary(outputs):
     avg_abs_calibration_gap = float(calibration["absolute_calibration_gap"].mean())
     max_abs_calibration_gap = float(calibration["absolute_calibration_gap"].max())
 
+    # Calibration affects how confidently the probabilities can be used for planning.
+    # Even with imperfect calibration, a strong ranking model can still be useful
+    # for prioritization if lift and value capture are strong.
     if avg_abs_calibration_gap <= 0.02:
         calibration_readout = "Calibration is strong enough for planning."
     elif avg_abs_calibration_gap <= 0.05:
