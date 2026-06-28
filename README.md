@@ -277,9 +277,10 @@ The project pipeline is organized as follows.
 08_save_worthiness_scoring.py
 09_retention_roi_simulation.py
 10_ab_test_planner.py
+11_build_tableau_exports.py
 ```
 
-Each script writes business-ready outputs into data/processed/, with SQL references saved in sql/.
+Each script writes business-ready outputs into data/processed/, with SQL references saved in sql/ where applicable.
 
 ## Tools used
 
@@ -287,9 +288,9 @@ Python, SQL logic, pandas, NumPy, scikit-learn, parquet outputs, model validatio
 
 The project was built to be explainable. The final outputs are meant for a business audience, not just a notebook audience.
 
-## Planned Part 2
+## Future extension
 
-The next version of this project will turn the retention strategy into an interactive Streamlit app.
+A future extension could turn the retention strategy into an interactive Streamlit app.
 
 The app will let a user adjust budget caps, response-rate assumptions, offer costs, and targeting strategies, then compare expected saved CLV proxy, campaign cost proxy, net save-value proxy, ROI proxy, and break-even response rate.
 
