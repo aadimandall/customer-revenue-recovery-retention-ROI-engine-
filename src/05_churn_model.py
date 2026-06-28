@@ -63,7 +63,9 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGET = "churn_next_period"
 
-
+# Features are limited to customer state available at the snapshot point.
+# Final value/action fields are attached after scoring for business evaluation,
+# not used as predictors.
 NUMERIC_FEATURES = [
     "age",
     "tenure_months",
@@ -112,7 +114,9 @@ CATEGORICAL_FEATURES = [
     "revenue_tier",
 ]
 
-
+# These features are intentionally separated because cancellation behavior can be
+# very predictive. The sensitivity model removes them to test whether broader
+# engagement and revenue behavior still rank churn risk well.
 CANCELLATION_SIGNAL_FEATURES = [
     "had_cancel",
     "latest_is_cancel",
@@ -124,7 +128,9 @@ SENSITIVITY_NUMERIC_FEATURES = [
     if col not in CANCELLATION_SIGNAL_FEATURES
 ]
 
-
+# Business columns are carried through after scoring so model performance can be
+# translated into churn capture, CLV exposure, and retention planning outputs.
+# They are not part of the model feature matrix.
 BUSINESS_COLUMNS = [
     "msno",
     "churn_next_period",
@@ -158,6 +164,8 @@ FORBIDDEN_MODEL_FEATURES = [
 
 
 def check_no_leakage_features() -> None:
+    # This is a simple guardrail against accidentally adding target, future-value,
+    # or final action fields into the model feature list later.
     feature_set = set(NUMERIC_FEATURES + CATEGORICAL_FEATURES)
     forbidden_used = sorted(feature_set.intersection(FORBIDDEN_MODEL_FEATURES))
 
@@ -195,6 +203,8 @@ def load_modeling_data() -> pd.DataFrame:
 
     df = df.copy()
     df[TARGET] = pd.to_numeric(df[TARGET], errors="coerce")
+    # The target is the future churn label used for supervised training.
+    # Rows without a known future label cannot be used for model evaluation.
 
     before = len(df)
     df = df[df[TARGET].notna()].copy()
@@ -235,7 +245,9 @@ def build_preprocessor(
                 ("imputer", SimpleImputer(strategy="median")),
             ]
         )
-
+    # Ordinal encoding keeps the pipeline compact and works cleanly with the
+    # tree-based model. In a production model, I would compare this against
+    # one-hot or native categorical handling.
     categorical_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="most_frequent")),
@@ -259,6 +271,8 @@ def build_preprocessor(
 
 
 def build_candidate_models() -> dict[str, dict]:
+    # I compare a linear benchmark, a nonlinear main model, and a no-cancel-signal
+    # sensitivity model. The goal is not only accuracy, but a defensible ranking model.
     return {
         "logistic_regression_balanced": {
             "numeric_features": NUMERIC_FEATURES,
@@ -356,7 +370,8 @@ def build_candidate_models() -> dict[str, dict]:
         },
     }
 
-
+# The model is mainly used for ranking customers by risk, so ROC-AUC and PR-AUC
+# matter more than the default 0.50 classification threshold.
 def evaluate_predictions(y_true: pd.Series, proba: np.ndarray, threshold: float = 0.50) -> dict:
     pred = (proba >= threshold).astype(int)
 
@@ -377,6 +392,8 @@ def make_risk_decile_table(y_true: pd.Series, proba: np.ndarray, business_df: pd
     scored["actual_churn"] = y_true.values
     scored["predicted_churn_probability"] = proba
 
+    # Deciles turn model scores into an operating view: if the model is useful,
+    # the highest-risk decile should capture more churn and more churned CLV than average.
     scored["risk_decile"] = pd.qcut(
         scored["predicted_churn_probability"].rank(method="first", ascending=False),
         q=10,
@@ -428,6 +445,8 @@ def make_threshold_table(y_true: pd.Series, proba: np.ndarray, business_df: pd.D
 
     rows = []
 
+    # Threshold simulation shows the tradeoff between campaign size and churn/value capture.
+    # This helps avoid choosing a targeting cutoff just because the model score is high.
     for target_pct in [0.01, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50]:
         n = max(1, int(len(scored) * target_pct))
         top = scored.head(n)
@@ -514,7 +533,8 @@ def make_scored_customer_file(model: Pipeline, df: pd.DataFrame, model_features:
         ],
         default="Unassigned",
     )
-
+    # This output is intentionally not the final campaign list.
+    # Later scripts combine risk with CLV, response assumptions, cost, and A/B test design.
     scored["model_stage_note"] = (
         "Predicted churn risk only. Final targeting comes later from save-worthiness scoring."
     )
@@ -560,6 +580,8 @@ def calculate_permutation_importance(
     y_test: pd.Series,
     model_features: list[str],
 ) -> pd.DataFrame:
+    # Permutation importance can be expensive on a large test set, so I use a
+    # fixed sample to keep the script repeatable and practical to rerun.
     sample_size = min(25000, len(X_test))
     sample = X_test.sample(sample_size, random_state=RANDOM_STATE)
     sample_y = y_test.loc[sample.index]
@@ -815,6 +837,8 @@ def main() -> None:
             f"Top decile lift={top_decile['lift_vs_portfolio']:.2f}x"
         )
 
+    # Model selection prioritizes PR-AUC first because churn is an imbalanced
+    # targeting problem. ROC-AUC and top-decile lift are used as supporting checks.
     model_comparison = pd.DataFrame(comparison_rows).sort_values(
         ["pr_auc", "roc_auc", "top_decile_lift"],
         ascending=False,
@@ -865,6 +889,8 @@ def main() -> None:
         index=False,
     )
 
+    # Save the full preprocessing + model pipeline so scoring can be reproduced
+    # without manually recreating feature transformations.
     joblib.dump(best_model, MODEL_DIR / "churn_model_pipeline.joblib")
 
     training_manifest = {
