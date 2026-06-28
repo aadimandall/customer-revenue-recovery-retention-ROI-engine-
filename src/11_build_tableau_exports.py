@@ -1,3 +1,25 @@
+"""
+11_build_tableau_exports.py
+
+Tableau export layer for the Customer Revenue Recovery & Retention ROI Engine.
+
+The modeling scripts create many detailed outputs. Tableau should not have to
+rebuild all of that business logic with messy calculated fields.
+
+This script creates clean, dashboard-ready CSVs for:
+1. Executive KPI cards
+2. Value leakage heatmaps
+3. Risk-value decision maps
+4. Save-worthiness funnel views
+5. ROI budget frontier charts
+6. A/B test readiness cards
+7. Model governance summaries
+8. Executive recommendation cards
+
+The goal is to keep Tableau focused on presentation while Python owns the
+analytics, assumptions, and business logic.
+"""
+
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -20,7 +42,8 @@ def write_csv(df: pd.DataFrame, filename: str) -> None:
     df.to_csv(path, index=False)
     print(f"Created {path.relative_to(ROOT)} | {len(df):,} rows x {len(df.columns):,} columns")
 
-
+# Display helpers keep Tableau labels consistent across KPI cards, tooltips,
+# and executive recommendation views.
 def money(x, decimals=2):
     if pd.isna(x):
         return ""
@@ -46,10 +69,11 @@ def num(x):
     return f"{float(x):,.0f}"
 
 
-# Load existing project outputs
+# Load the final outputs from each analytical layer.
+# This script should not recompute model logic; it only reshapes validated outputs
+# into Tableau-friendly tables.
 clv_deciles = read_csv("revenue_leakage_outputs/04_clv_concentration_deciles.csv")
 leakage_base = read_csv("revenue_leakage_outputs/08_tableau_revenue_leakage_base.csv")
-priority_segments = read_csv("revenue_leakage_outputs/12_model_priority_segments.csv")
 
 risk_deciles = read_csv("churn_model_outputs/01_risk_decile_business_summary.csv")
 sensitivity = read_csv("model_validation_outputs/07_cancellation_signal_sensitivity_readout.csv")
@@ -59,22 +83,19 @@ lifecycle_segments = read_csv("survival_lifecycle_outputs/04_model_priority_life
 
 save_portfolio = read_csv("save_worthiness_outputs/00_save_worthiness_portfolio_summary.csv").iloc[0]
 retention_actions = read_csv("save_worthiness_outputs/01_retention_action_summary.csv")
-save_deciles = read_csv("save_worthiness_outputs/04_save_worthiness_deciles.csv")
 
-roi_summary = read_csv("retention_roi_outputs/00_roi_portfolio_summary.csv").iloc[0]
 budget_frontier = read_csv("retention_roi_outputs/03_budget_cap_frontier.csv")
 
 ab_portfolio = read_csv("ab_test_outputs/00_ab_test_portfolio_summary.csv").iloc[0]
 experiment = read_csv("ab_test_outputs/01_experiment_design_summary.csv").iloc[0]
-ab_tableau_plan = read_csv("ab_test_outputs/08_tableau_ab_test_plan.csv")
 
 
-# Fixed executive headline values from final project summary
+# Locked executive headline values from the final project summary.
+# These are kept explicit so the Tableau board, README, and project narrative
+# use the same headline figures.
 ANNUAL_REVENUE_RUN_RATE_PROXY = 1_690_000_000
 ANNUAL_MARGIN_RUN_RATE_PROXY = 1_100_000_000
 TOP_5_FUTURE_CHURNED_CLV_SHARE = 0.7809
-BASE_RECOVERABLE_CLV_OPPORTUNITY = 13_770_000
-PREMIUM_SAVE_BUDGET_NET_OPPORTUNITY = 11_590_000
 TOP_RECOVERY_FUTURE_CHURNED_REVENUE_PROXY = 10_893_857
 
 
@@ -82,25 +103,10 @@ TOP_RECOVERY_FUTURE_CHURNED_REVENUE_PROXY = 10_893_857
 total_customers = float(save_portfolio["customers"])
 total_clv = float(save_portfolio["profit_adjusted_clv_proxy"])
 future_churned_clv = float(save_portfolio["future_churned_clv_proxy"])
+if total_customers <= 0 or total_clv <= 0:
+    raise ValueError("Executive export requires positive customer count and positive total CLV.")
+
 clv_leakage_rate = future_churned_clv / total_clv
-
-elite_value_customers = leakage_base.loc[
-    leakage_base["clv_value_tier"].eq("Elite value"), "customers"
-].sum()
-
-protect_high_value = leakage_base.loc[
-    leakage_base["value_based_action_group"].eq("Protect high-value customer")
-]
-protect_high_value_customers = protect_high_value["customers"].sum()
-protect_high_value_future_clv = protect_high_value["future_churned_clv_proxy"].sum()
-protect_high_value_leakage = protect_high_value_future_clv / protect_high_value["profit_adjusted_clv_proxy"].sum()
-
-premium_save = leakage_base.loc[
-    leakage_base["retention_budget_tier"].eq("Premium save budget")
-]
-premium_save_customers = premium_save["customers"].sum()
-premium_save_future_clv = premium_save["future_churned_clv_proxy"].sum()
-premium_save_leakage = premium_save_future_clv / premium_save["profit_adjusted_clv_proxy"].sum()
 
 high_risk_high_value = lifecycle_quadrants.loc[
     lifecycle_quadrants["value_risk_quadrant"].astype(str).str.contains("High risk / high value", na=False)
@@ -114,6 +120,8 @@ sensitivity_row = sensitivity.iloc[0]
 
 
 # 01. Executive KPI summary
+# One row per KPI keeps the Tableau executive card layout simple:
+# section, metric, raw value, display value, readout, and sort order.
 kpi_rows = []
 
 
@@ -162,6 +170,8 @@ write_csv(pd.DataFrame(kpi_rows), "01_executive_kpi_summary.csv")
 
 
 # 02. Value leakage heatmap
+# Pre-aggregating the risk/value grid in Python prevents Tableau from needing
+# complex joins or repeated calculated fields.
 heatmap = (
     lifecycle_segments
     .groupby(["churn_risk_tier", "clv_value_tier"], dropna=False)
@@ -184,6 +194,7 @@ write_csv(heatmap, "02_value_leakage_heatmap.csv")
 
 
 # 03. Risk-value decision map
+# This view supports the executive question: where is churn risk commercially meaningful?
 decision_map = lifecycle_segments.copy()
 decision_map["segment_label"] = (
     decision_map["lifecycle_stage"].astype(str)
@@ -214,6 +225,8 @@ write_csv(decision_map, "03_risk_value_decision_map.csv")
 
 
 # 04. Save-worthiness funnel
+# The funnel shows how the project narrows from all customers to the testable
+# treatment/control population.
 funnel_rows = [
     {
         "stage_order": 1,
@@ -270,6 +283,8 @@ write_csv(funnel, "04_save_worthiness_funnel.csv")
 
 
 # 05. ROI budget frontier
+# This export powers the capital allocation view: which budget captures most
+# of the tested net value without unnecessary spend?
 frontier = budget_frontier.copy()
 max_net_value = frontier["net_save_value_proxy"].max()
 frontier["value_capture_vs_max"] = frontier["net_save_value_proxy"] / max_net_value
@@ -288,6 +303,8 @@ write_csv(frontier, "05_roi_budget_frontier.csv")
 
 
 # 06. A/B test readiness
+# These rows become executive cards explaining why the campaign should be tested
+# before any full rollout.
 ab_rows = [
     ("Experiment overview", "Candidate customers", experiment["candidate_customers"], num(experiment["candidate_customers"]), "Efficient-frontier save-worthy population selected for testing.", 1),
     ("Experiment overview", "Treatment customers", experiment["treatment_customers"], num(experiment["treatment_customers"]), "Customers assigned to receive the retention intervention.", 2),
@@ -310,6 +327,8 @@ write_csv(ab_ready, "06_ab_test_readiness.csv")
 
 
 # 07. Model governance summary
+# This keeps model quality and leakage/sensitivity checks visible inside the dashboard,
+# not buried in the code.
 model_rows = [
     ("Main churn model", "Model", np.nan, "HistGradientBoosting", "Best-performing churn-risk model used for business ranking.", 1),
     ("Main churn model", "ROC-AUC", sensitivity_row["main_model_roc_auc"], f"{float(sensitivity_row['main_model_roc_auc']):.4f}", "Main model discrimination performance.", 2),
@@ -353,6 +372,7 @@ write_csv(lifecycle_priority, "08_lifecycle_priority_segments.csv")
 
 
 # 09. Executive recommendation cards
+# These rows translate the analysis into a decision memo format inside Tableau.
 recommendation_rows = [
     ("Recommended strategy", "Target save-worthy paid-offer candidates near the efficient budget frontier.", "Strategy", 1),
     ("Target population", f"{num(save_portfolio['paid_offer_customers'])} economically positive paid-offer candidates.", "Target", 2),
