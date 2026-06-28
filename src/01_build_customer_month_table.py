@@ -11,12 +11,20 @@ Tableau reporting, and the Streamlit strategy simulator.
 The key idea is to move away from a flat churn dataset and create a warehouse-style
 customer-month layer: one row per user per observed month, with subscription behavior,
 engagement, revenue proxy, lifecycle features, and churn outcome.
+
+Main outputs:
+- data/processed/customer_month_table.parquet
+- data/processed/modeling_customer_snapshot.parquet
+- data/processed/tableau_customer_retention_base.csv
+- data/processed/customer_month_build_summary.json
+
+The customer-month table supports time-based analysis. The modeling snapshot gives
+later scripts one current decision row per customer.
 """
 
 from pathlib import Path
 import json
 import duckdb
-import pandas as pd
 
 
 INTERIM_DIR = Path("data/interim")
@@ -29,6 +37,26 @@ OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 SQL_DIR.mkdir(parents=True, exist_ok=True)
 
 
+REQUIRED_INTERIM_FILES = [
+    "train_clean.parquet",
+    "members_clean.parquet",
+    "transactions_clean.parquet",
+    "user_logs_monthly.parquet",
+]
+
+
+def check_interim_files() -> None:
+    missing = [filename for filename in REQUIRED_INTERIM_FILES if not (INTERIM_DIR / filename).exists()]
+    if missing:
+        raise FileNotFoundError(
+            "Missing interim file(s): "
+            + ", ".join(missing)
+            + ". Run src/00_clean_data.py first."
+        )
+
+
+# This SQL creates the customer-month grain used by the rest of the project.
+# Each row represents one customer in one observed transaction or activity month.
 CUSTOMER_MONTH_SQL = """
 CREATE OR REPLACE TABLE customer_month_table AS
 WITH transaction_monthly AS (
@@ -72,6 +100,8 @@ activity_monthly AS (
 ),
 
 customer_month_keys AS (
+    -- Use the union of transaction months and activity months so customers are
+    -- kept when they have listening activity but no payment, or payment but no logs.
     SELECT msno, snapshot_month FROM transaction_monthly
     UNION
     SELECT msno, snapshot_month FROM activity_monthly
@@ -116,6 +146,8 @@ customer_month_base AS (
         COALESCE(a.completion_rate_proxy, 0) AS completion_rate_proxy,
         COALESCE(a.engagement_score, 0) AS engagement_score,
 
+        -- The churn label is carried through for supervised modeling later.
+        -- It is not used to create the behavior features in this table.
         tr.is_churn AS churn_next_period
     FROM customer_month_keys k
     LEFT JOIN transaction_monthly t
@@ -133,6 +165,8 @@ customer_month_base AS (
 customer_month_features AS (
     SELECT
         *,
+        -- Prior-month and trailing-window features capture behavior change,
+        -- which is usually more useful for retention than a single raw month.
         LAG(engagement_score) OVER (
             PARTITION BY msno
             ORDER BY snapshot_month_date
@@ -210,11 +244,15 @@ FROM customer_month_features
 """
 
 
+# The modeling snapshot collapses the customer-month table to one row per customer.
+# Downstream CLV, churn, save-worthiness, and ROI scripts need one decision row
+# per customer, not one row per customer-month.
 MODELING_SNAPSHOT_SQL = """
 CREATE OR REPLACE TABLE modeling_customer_snapshot AS
 WITH latest_customer_month AS (
     SELECT
         *,
+        -- Keep the most recent observed customer-month as the current state.
         ROW_NUMBER() OVER (
             PARTITION BY msno
             ORDER BY snapshot_month_date DESC
@@ -225,6 +263,7 @@ WITH latest_customer_month AS (
 latest_transaction AS (
     SELECT
         msno,
+        -- Latest transaction fields capture the most recent payment and cancel signals.
         payment_method_id,
         payment_plan_days AS latest_payment_plan_days,
         plan_list_price AS latest_plan_list_price,
@@ -244,6 +283,8 @@ SELECT
     tr.msno,
     tr.is_churn AS churn_next_period,
 
+    -- Some labeled users may not have transaction/activity coverage after filtering.
+    -- Keep them in the modeling snapshot so the row count still matches train_v2.
     COALESCE(cm.snapshot_month, 'no_observed_month') AS snapshot_month,
     cm.snapshot_month_date,
 
@@ -301,6 +342,7 @@ SELECT
     lt.latest_transaction_date_raw,
     lt.latest_membership_expire_date_raw,
 
+    -- These simple flags become interpretable churn and save-worthiness signals.
     CASE
         WHEN COALESCE(cm.engagement_score, 0) = 0 THEN 1
         ELSE 0
@@ -330,6 +372,8 @@ LEFT JOIN latest_transaction lt
 
 def main() -> None:
     print("\nBuilding customer-month analytical model...")
+
+    check_interim_files()
 
     con = duckdb.connect(database=":memory:")
 
@@ -394,6 +438,7 @@ def main() -> None:
 
     con.execute(f"COPY customer_month_summary TO '{summary_path}' (HEADER, DELIMITER ',')")
 
+    # Build summary is an audit trail for the table grain and snapshot coverage.
     summary = {
         "customer_month_rows": con.execute("SELECT COUNT(*) FROM customer_month_table").fetchone()[0],
         "customer_month_unique_users": con.execute("SELECT COUNT(DISTINCT msno) FROM customer_month_table").fetchone()[0],

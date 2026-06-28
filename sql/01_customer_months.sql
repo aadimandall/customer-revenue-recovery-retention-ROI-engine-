@@ -40,6 +40,8 @@ activity_monthly AS (
 ),
 
 customer_month_keys AS (
+    -- Use the union of transaction months and activity months so customers are
+    -- kept when they have listening activity but no payment, or payment but no logs.
     SELECT msno, snapshot_month FROM transaction_monthly
     UNION
     SELECT msno, snapshot_month FROM activity_monthly
@@ -84,6 +86,8 @@ customer_month_base AS (
         COALESCE(a.completion_rate_proxy, 0) AS completion_rate_proxy,
         COALESCE(a.engagement_score, 0) AS engagement_score,
 
+        -- The churn label is carried through for supervised modeling later.
+        -- It is not used to create the behavior features in this table.
         tr.is_churn AS churn_next_period
     FROM customer_month_keys k
     LEFT JOIN transaction_monthly t
@@ -101,6 +105,8 @@ customer_month_base AS (
 customer_month_features AS (
     SELECT
         *,
+        -- Prior-month and trailing-window features capture behavior change,
+        -- which is usually more useful for retention than a single raw month.
         LAG(engagement_score) OVER (
             PARTITION BY msno
             ORDER BY snapshot_month_date
@@ -180,6 +186,7 @@ CREATE OR REPLACE TABLE modeling_customer_snapshot AS
 WITH latest_customer_month AS (
     SELECT
         *,
+        -- Keep the most recent observed customer-month as the current state.
         ROW_NUMBER() OVER (
             PARTITION BY msno
             ORDER BY snapshot_month_date DESC
@@ -190,6 +197,7 @@ WITH latest_customer_month AS (
 latest_transaction AS (
     SELECT
         msno,
+        -- Latest transaction fields capture the most recent payment and cancel signals.
         payment_method_id,
         payment_plan_days AS latest_payment_plan_days,
         plan_list_price AS latest_plan_list_price,
@@ -209,6 +217,8 @@ SELECT
     tr.msno,
     tr.is_churn AS churn_next_period,
 
+    -- Some labeled users may not have transaction/activity coverage after filtering.
+    -- Keep them in the modeling snapshot so the row count still matches train_v2.
     COALESCE(cm.snapshot_month, 'no_observed_month') AS snapshot_month,
     cm.snapshot_month_date,
 
@@ -266,6 +276,7 @@ SELECT
     lt.latest_transaction_date_raw,
     lt.latest_membership_expire_date_raw,
 
+    -- These simple flags become interpretable churn and save-worthiness signals.
     CASE
         WHEN COALESCE(cm.engagement_score, 0) = 0 THEN 1
         ELSE 0
